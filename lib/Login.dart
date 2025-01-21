@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Login extends StatefulWidget {
+  const Login({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
