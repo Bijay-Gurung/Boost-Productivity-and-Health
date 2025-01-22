@@ -6,13 +6,22 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log('Received login request:', { email, password });
 
         const user = await Signup.findOne({ email });
         if (!user) {
+            console.log('User not found for email:', email);
             return res.status(400).json({ message: 'User not found' });
         }
 
+        console.log('User found:', user);
+
+        console.log('Plaintext password:', password);
+        console.log('Hashed password from DB:', user.password);
+
         const isMatch = await bcrypt.compare(password, user.password);
+        console.log('Password match result:', isMatch);
+
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }

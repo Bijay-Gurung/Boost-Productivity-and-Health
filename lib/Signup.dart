@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui';
+import 'Login.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -16,7 +17,7 @@ class _SignupScreenState extends State<Signup> {
   final _passwordController = TextEditingController();
 
   Future<void> _signup() async {
-    final url = Uri.parse('http://10.22.18.228:4000/signup');
+    final url = Uri.parse('http://192.168.1.74:4000/signup');
 
     try {
       final response = await http.post(
@@ -155,6 +156,7 @@ class _SignupScreenState extends State<Signup> {
                       const SizedBox(height: 10),
                       TextButton(
                         onPressed: () {
+                          Navigator.pushNamed(context, '/login');
                         },
                         child: const Text(
                           'Already have an account? Login',
