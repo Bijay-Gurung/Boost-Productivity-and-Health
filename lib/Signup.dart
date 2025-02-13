@@ -17,7 +17,7 @@ class _SignupScreenState extends State<Signup> {
   final _passwordController = TextEditingController();
 
   Future<void> _signup() async {
-    final url = Uri.parse('http://192.168.1.74:4000/signup');
+    final url = Uri.parse('http://10.22.23.40:4000/signup');
 
     try {
       final response = await http.post(

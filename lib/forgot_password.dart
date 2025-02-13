@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
+
   @override
   _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
@@ -13,7 +15,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Future<void> sendOTP() async {
     final response = await http.post(
-      Uri.parse("http://192.168.1.74:4000/forgot-password"),
+      Uri.parse('http://10.22.23.40:4000/forgot-password'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({"email": emailController.text}),
     );
