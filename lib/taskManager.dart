@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class TaskManager {
   final String task;
-  final bool isCompleted;
+  bool isCompleted;
   final DateTime dueDate;
   final DateTime createdAt;
   final String id;
@@ -16,7 +16,6 @@ class TaskManager {
     required this.id,
   });
 
-  // Factory constructor to create a TaskManager object from JSON
   factory TaskManager.fromJson(Map<String, dynamic> json) {
     return TaskManager(
       task: json['task'],
@@ -27,7 +26,6 @@ class TaskManager {
     );
   }
 
-  // Convert a TaskManager object to JSON
   Map<String, dynamic> toJson() {
     return {
       'task': task,
@@ -38,9 +36,8 @@ class TaskManager {
 }
 
 class TaskManagerService {
-  final String baseUrl = 'http://localhost:4000/taskManager';
+  final String baseUrl = 'http://192.168.1.74:4000/taskManager';
 
-  // Create a new task
   Future<TaskManager> createTask(String task, DateTime dueDate) async {
     try {
       final response = await http.post(
@@ -63,7 +60,6 @@ class TaskManagerService {
     }
   }
 
-  // Fetch all tasks
   Future<List<TaskManager>> fetchTasks() async {
     try {
       final response = await http.get(Uri.parse(baseUrl));
@@ -79,7 +75,6 @@ class TaskManagerService {
     }
   }
 
-  // Update a task
   Future<TaskManager> updateTask(String taskId, Map<String, dynamic> updatedData) async {
     try {
       final response = await http.put(
@@ -99,7 +94,6 @@ class TaskManagerService {
     }
   }
 
-  // Delete a task
   Future<void> deleteTask(String taskId) async {
     try {
       final response = await http.delete(Uri.parse('$baseUrl/$taskId'));

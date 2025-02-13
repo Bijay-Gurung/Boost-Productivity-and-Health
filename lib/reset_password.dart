@@ -32,7 +32,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.1.74:4000/reset-password"), // Change localhost to LAN IP
+        Uri.parse("http://192.168.1.74:4000/reset-password"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": widget.email,
