@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'taskManagerScreen.dart';  
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Boost Productivity & Health',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        )),
-
+        title: Text(
+          'Boost Productivity & Health',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.notifications),
@@ -40,9 +42,27 @@ class HomePage extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  Expanded(child: FeatureCard(title: 'Task Manager', imagePath: 'assets/taskManager.jpg')),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => TaskManagerScreen()),
+                        );
+                      },
+                      child: FeatureCard(
+                        title: 'Task Manager',
+                        imagePath: 'assets/taskManager.jpg',
+                      ),
+                    ),
+                  ),
                   SizedBox(width: 16),
-                  Expanded(child: FeatureCard(title: 'Exercise', imagePath: 'assets/FitnessandExercise.jpg')),
+                  Expanded(
+                    child: FeatureCard(
+                      title: 'Exercise',
+                      imagePath: 'assets/FitnessandExercise.jpg',
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -50,7 +70,12 @@ class HomePage extends StatelessWidget {
             Flexible(
               child: Row(
                 children: [
-                  Flexible(child: FeatureCard(title: 'Meal Planning', imagePath: 'assets/mealPlanning.jpg')),
+                  Flexible(
+                    child: FeatureCard(
+                      title: 'Meal Planning',
+                      imagePath: 'assets/mealPlanning.jpg',
+                    ),
+                  ),
                   SizedBox(width: 16),
                 ],
               ),

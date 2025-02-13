@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'Signup.dart';
 import 'Login.dart';
+import 'home.dart';
+import 'taskManagerScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,10 +18,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/', 
       routes: {
-        '/': (context)=> const Signup(),
+        '/': (context) => const Signup(),
         '/login': (context) => const Login(),
+        '/home': (context) => HomePage(),
+        '/taskManager': (context) => TaskManagerScreen(),
       },
     );
   }
