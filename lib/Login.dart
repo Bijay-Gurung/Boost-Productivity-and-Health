@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui';
+import 'forgot_password.dart';
+import 'home.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,6 +16,7 @@ class _LoginScreenState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
 
   Future<void> _login() async {
     final url = Uri.parse('http://192.168.1.74:4000/login');
@@ -44,7 +47,12 @@ class _LoginScreenState extends State<Login> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(data['message'])),
         );
-        // Navigate to home page or handle login success
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+
       } else {
         final error = json.decode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -54,7 +62,7 @@ class _LoginScreenState extends State<Login> {
     } catch (e) {
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text('Error: Could not connect to server')),
       );
     }
   }
@@ -118,6 +126,7 @@ class _LoginScreenState extends State<Login> {
                       TextField(
                         controller: _passwordController,
                         style: const TextStyle(color: Colors.white),
+                        obscureText: !_isPasswordVisible,
                         decoration: InputDecoration(
                           hintText: 'Password',
                           hintStyle: const TextStyle(color: Colors.white70),
@@ -127,10 +136,39 @@ class _LoginScreenState extends State<Login> {
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide.none,
                           ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white70,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
+
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ForgotPasswordScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: _isLoading ? null : _login,
                         style: ElevatedButton.styleFrom(

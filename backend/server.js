@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const signupRouter = require('./routes/signupRoutes.js');
 const loginRouter = require('./routes/loginRoutes.js');
 const taskManagerRouter = require('./routes/taskManagerRoutes.js');
+const PasswordResetRouter = require('./routes/passwordResetRoutes.js');
 
 const app = express();
 const PORT = 4000;
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
 app.use('/taskManager', taskManagerRouter);
+app.use('/forgot-password', PasswordResetRouter);
 
 mongoose.connect('mongodb://localhost:27017/BoostProductivityAndHealth')
 .then(() => console.log('Connected to MongoDB'))
