@@ -61,7 +61,7 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
           TextButton(
             onPressed: () {
               final task = taskController.text;
-              final dueDate = DateTime.parse('${dueDateController.text} ${timeController.text}');
+              final dueDate = DateTime.parse('${dueDateController.text}T${timeController.text}');
               _taskManagerService.createTask(task, dueDate).then((newTask) {
                 setState(() {
                   _tasks.add(newTask);
@@ -111,7 +111,7 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
           TextButton(
             onPressed: () {
               final updatedTask = taskController.text;
-              final updatedDueDate = DateTime.parse('${dueDateController.text} ${timeController.text}');
+              final updatedDueDate = DateTime.parse('${dueDateController.text}T${timeController.text}');
 
               _taskManagerService.updateTask(task.id, {
                 'task': updatedTask,

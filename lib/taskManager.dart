@@ -20,8 +20,8 @@ class TaskManager {
     return TaskManager(
       task: json['task'],
       isCompleted: json['isCompleted'] ?? false,
-      dueDate: DateTime.parse(json['dueDate']),
-      createdAt: DateTime.parse(json['createdAt']),
+      dueDate: DateTime.parse(json['dueDate']).toLocal(),
+      createdAt: DateTime.parse(json['createdAt']).toLocal(),
       id: json['_id'],
     );
   }
@@ -30,7 +30,7 @@ class TaskManager {
     return {
       'task': task,
       'isCompleted': isCompleted,
-      'dueDate': dueDate.toIso8601String(),
+      'dueDate': dueDate.toUtc().toIso8601String(), // Convert to UTC before sending
     };
   }
 }
@@ -45,7 +45,7 @@ class TaskManagerService {
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'task': task,
-          'dueDate': dueDate.toIso8601String(),
+          'dueDate': dueDate.toUtc().toIso8601String(), // UTC conversion
         }),
       );
 
@@ -77,10 +77,17 @@ class TaskManagerService {
 
   Future<TaskManager> updateTask(String taskId, Map<String, dynamic> updatedData) async {
     try {
+      // Extract and convert dueDate to UTC
+      final dueDate = DateTime.parse(updatedData['dueDate']).toUtc();
+
       final response = await http.put(
         Uri.parse('$baseUrl/$taskId'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode(updatedData),
+        body: json.encode({
+          'task': updatedData['task'], // Access the task from the map
+          'dueDate': dueDate.toIso8601String(),
+          'isCompleted': updatedData['isCompleted'],
+        }),
       );
 
       if (response.statusCode == 200) {
