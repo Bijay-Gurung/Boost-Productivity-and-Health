@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
-import 'login.dart'; // Make sure this import exists for navigation
+import 'login.dart';
 
 class HomePage extends StatelessWidget {
   final String userName;
@@ -49,19 +49,11 @@ class HomePage extends StatelessWidget {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                // Add settings navigation
-              },
-            ),
             const Divider(),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
-                // Navigate back to login screen
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const Login()),
