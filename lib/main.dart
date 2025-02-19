@@ -3,6 +3,7 @@ import 'Signup.dart';
 import 'Login.dart';
 import 'home.dart';
 import 'taskManagerScreen.dart';
+import 'details.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const Login(),
         '/home': (context) => HomePage(),
         '/taskManager': (context) => TaskManagerScreen(),
+        '/details': (context) => Details(),
       },
     );
   }

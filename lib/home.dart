@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'taskManagerScreen.dart';  
+import 'taskManagerScreen.dart';
+import 'details.dart';
 
 class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,48 +42,52 @@ class HomePage extends StatelessWidget {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => TaskManagerScreen()),
-                        );
-                      },
-                      child: FeatureCard(
-                        title: 'Task Manager',
-                        imagePath: 'assets/taskManager.jpg',
-                      ),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TaskManagerScreen()),
+                      );
+                    },
+                    child: FeatureCard(
+                      title: 'Task Manager',
+                      imagePath: 'assets/taskManager.jpg',
                     ),
                   ),
-                  SizedBox(width: 16),
-                  Expanded(
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Details()),
+                      );
+                    },
                     child: FeatureCard(
                       title: 'Exercise',
                       imagePath: 'assets/FitnessandExercise.jpg',
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
-            Flexible(
-              child: Row(
-                children: [
-                  Flexible(
+            SizedBox(height: 16), // Space between rows
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
                     child: FeatureCard(
                       title: 'Meal Planning',
                       imagePath: 'assets/mealPlanning.jpg',
                     ),
                   ),
-                  SizedBox(width: 16),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(height: 16),
           ],
         ),
       ),
@@ -92,11 +99,12 @@ class FeatureCard extends StatelessWidget {
   final String title;
   final String imagePath;
 
-  FeatureCard({required this.title, required this.imagePath});
+  const FeatureCard({super.key, required this.title, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 150, // Adjust height if needed
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: DecorationImage(

@@ -15,7 +15,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Future<void> sendOTP() async {
     final response = await http.post(
-      Uri.parse('http://10.22.23.40:4000/forgot-password'),
+      Uri.parse('http://192.168.1.74:4000/forgot-password'),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({"email": emailController.text}),
     );
