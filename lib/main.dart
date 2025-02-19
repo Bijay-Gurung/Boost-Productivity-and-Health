@@ -6,7 +6,7 @@ import 'taskManagerScreen.dart';
 import 'details.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +23,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const Signup(),
         '/login': (context) => const Login(),
-        '/home': (context) => HomePage(),
+        '/home': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+          return HomePage(userName: args['userName']!, email: args['email']!);
+        },
         '/taskManager': (context) => TaskManagerScreen(),
         '/details': (context) => Details(),
       },

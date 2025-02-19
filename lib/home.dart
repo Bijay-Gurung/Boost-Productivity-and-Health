@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
+import 'login.dart'; // Make sure this import exists for navigation
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final String userName;
+  final String email;
+
+  const HomePage({super.key, required this.userName, required this.email});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Boost Productivity & Health',
           style: TextStyle(
             fontSize: 18,
@@ -18,7 +22,7 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
             onPressed: () {},
           ),
         ],
@@ -28,18 +32,47 @@ class HomePage extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
-              accountName: Text('Bijay Gurung'),
-              accountEmail: Text('stha4580@gmail.com'),
+              accountName: Text(userName),
+              accountEmail: Text(email),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Icon(Icons.person, size: 40),
               ),
+              decoration: const BoxDecoration(
+                color: Colors.blueAccent,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                // Add settings navigation
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                // Navigate back to login screen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Login()),
+                );
+              },
             ),
           ],
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Row(
@@ -49,25 +82,26 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => TaskManagerScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const TaskManagerScreen()),
                       );
                     },
-                    child: FeatureCard(
+                    child: const FeatureCard(
                       title: 'Task Manager',
                       imagePath: 'assets/taskManager.jpg',
                     ),
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Details()),
+                        MaterialPageRoute(builder: (context) => const Details()),
                       );
                     },
-                    child: FeatureCard(
+                    child: const FeatureCard(
                       title: 'Exercise',
                       imagePath: 'assets/FitnessandExercise.jpg',
                     ),
@@ -75,12 +109,12 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16), // Space between rows
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: GestureDetector(
-                    child: FeatureCard(
+                    child: const FeatureCard(
                       title: 'Meal Planning',
                       imagePath: 'assets/mealPlanning.jpg',
                     ),
@@ -104,7 +138,7 @@ class FeatureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150, // Adjust height if needed
+      height: 150,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         image: DecorationImage(
@@ -119,10 +153,10 @@ class FeatureCard extends StatelessWidget {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Padding(
-          padding: EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(12.0),
           child: Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,

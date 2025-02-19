@@ -50,7 +50,10 @@ class _LoginScreenState extends State<Login> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => HomePage(
+            userName: data['user']['userName'],
+            email: data['user']['email'],
+          )),
         );
 
       } else {

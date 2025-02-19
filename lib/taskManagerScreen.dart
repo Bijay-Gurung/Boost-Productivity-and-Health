@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'taskManager.dart';
 
 class TaskManagerScreen extends StatefulWidget {
+  const TaskManagerScreen({super.key});
+
   @override
   _TaskManagerScreenState createState() => _TaskManagerScreenState();
 }
@@ -193,8 +195,8 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addTask,
-        child: Icon(Icons.add),
         backgroundColor: Colors.blue,
+        child: Icon(Icons.add),
       ),
     );
   }
