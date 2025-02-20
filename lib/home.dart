@@ -95,7 +95,7 @@ class HomePage extends StatelessWidget {
                     },
                     child: const FeatureCard(
                       title: 'Exercise',
-                      imagePath: 'assets/FitnessandExercise.jpg',
+                      imagePath: 'assets/Fitness&Exercise.jpg',
                     ),
                   ),
                 ),

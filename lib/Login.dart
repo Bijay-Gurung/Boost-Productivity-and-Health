@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui';
-import 'forgot_password.dart';
 import 'home.dart';
+import 'forgotPassword.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -161,7 +161,7 @@ class _LoginScreenState extends State<Login> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ForgotPasswordScreen(),
+                              builder: (context) => ForgotPassword(),
                             ),
                           );
                         },

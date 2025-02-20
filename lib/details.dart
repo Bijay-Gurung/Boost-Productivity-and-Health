@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Details extends StatefulWidget {
   const Details({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _DetailsState createState() => _DetailsState();
 }
 
-class _SplashScreenState extends State<Details> {
+class _DetailsState extends State<Details> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -18,6 +20,94 @@ class _SplashScreenState extends State<Details> {
     if (hour < 12) return 'Good Morning';
     if (hour < 17) return 'Good Afternoon';
     return 'Good Evening';
+  }
+
+  Future<void> saveDetails() async {
+    final age = _ageController.text;
+    final height = _heightController.text;
+    final weight = _weightController.text;
+
+    if (age.isEmpty || height.isEmpty || weight.isEmpty || _selectedGender == null) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Please fill in all fields.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse('http:// 192.168.1.74:4000/details'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'age': age,
+          'height': height,
+          'weight': weight,
+          'gender': _selectedGender,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Details saved successfully!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Failed to save details. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text('Something went wrong. Please try again later.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -85,9 +175,7 @@ class _SplashScreenState extends State<Details> {
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: () {
-                // Handle next button press
-              },
+              onPressed: saveDetails,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal,
                 minimumSize: const Size(double.infinity, 50),
@@ -123,6 +211,7 @@ class _SplashScreenState extends State<Details> {
           vertical: 15,
         ),
       ),
+      keyboardType: TextInputType.number,
     );
   }
 }

@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const User = require('../models/userSchema');
+const Signup = require('../models/signupSchema');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 
 const generateOTP = () => Math.floor(1000 + Math.random() * 9000).toString();
 
-router.post("/forgot-password", async (req, res) => {
+router.post("", async (req, res) => {
   const { email } = req.body;
-  const user = await User.findOne({ email });
+  const user = await Signup.findOne({ email });
   if (!user) return res.status(400).json({ message: "User not found" });
 
   const otp = generateOTP();
@@ -27,33 +27,32 @@ router.post("/forgot-password", async (req, res) => {
 
 router.post("/verify-otp", async (req, res) => {
   const { email, otp } = req.body;
-  const user = await User.findOne({ email, otp, otpExpires: { $gt: Date.now() } });
+  const user = await Signup.findOne({ email, otp, otpExpires: { $gt: Date.now() } });
 
   if (!user) return res.status(400).json({ message: "Invalid or expired OTP" });
 
-  user.otp = null; 
-  user.otpExpires = null;
+  user.otp = null;
+  user.otpExpires = null; 
   await user.save();
-  
+
   res.json({ message: "OTP verified successfully" });
 });
 
 router.post("/reset-password", async (req, res) => {
   const { email, newPassword, confirmPassword } = req.body;
-  
+
   if (newPassword !== confirmPassword) {
     return res.status(400).json({ message: "Passwords do not match" });
   }
 
-  const user = await User.findOne({ email });
+  const user = await Signup.findOne({ email });
   if (!user) return res.status(400).json({ message: "User not found" });
 
-  const hashedPassword = await bcrypt.hash(newPassword, 10); // Hash password
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
   user.password = hashedPassword;
   await user.save();
 
   res.json({ message: "Password reset successfully" });
 });
-
 
 module.exports = router;
