@@ -18,6 +18,19 @@ const detailsSchema = new mongoose.Schema({
     enum: ['Male', 'Female', 'Other'],
     required: true,
   },
+  bmi: {
+    type: Number,
+    required: false,
+  },
+  bmr: {
+    type: Number,
+    required: false,
+  },
+  fitnessGoal: {
+    type: String,
+    enum: ['Muscle Building', 'Weight Loss', 'Maintain Weight'],
+    required: false,
+  },
 });
 
 const Details = mongoose.model('Details', detailsSchema);

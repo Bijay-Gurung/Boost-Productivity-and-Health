@@ -30,7 +30,7 @@ class TaskManager {
     return {
       'task': task,
       'isCompleted': isCompleted,
-      'dueDate': dueDate.toUtc().toIso8601String(), // Convert to UTC before sending
+      'dueDate': dueDate.toUtc().toIso8601String(),
     };
   }
 }
@@ -45,7 +45,7 @@ class TaskManagerService {
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'task': task,
-          'dueDate': dueDate.toUtc().toIso8601String(), // UTC conversion
+          'dueDate': dueDate.toUtc().toIso8601String(),
         }),
       );
 
@@ -84,7 +84,7 @@ class TaskManagerService {
         Uri.parse('$baseUrl/$taskId'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
-          'task': updatedData['task'], // Access the task from the map
+          'task': updatedData['task'],
           'dueDate': dueDate.toIso8601String(),
           'isCompleted': updatedData['isCompleted'],
         }),

@@ -4,7 +4,7 @@ import 'Login.dart';
 import 'home.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
-
+import 'next.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -29,6 +29,15 @@ class MyApp extends StatelessWidget {
         },
         '/taskManager': (context) => TaskManagerScreen(),
         '/details': (context) => Details(),
+        '/next': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return NextPage(
+            age: args['age'],
+            height: args['height'],
+            weight: args['weight'],
+            gender: args['gender'],
+          );
+        },
       },
     );
   }

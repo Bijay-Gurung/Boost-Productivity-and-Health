@@ -1,39 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'next.dart';
 
-class Details extends StatefulWidget {
-  const Details({super.key});
+class NextPage extends StatefulWidget {
+  final int age;
+  final int height;
+  final int weight;
+  final String gender;
+
+  const NextPage({
+    Key? key,
+    required this.age,
+    required this.height,
+    required this.weight,
+    required this.gender,
+  }) : super(key: key);
 
   @override
-  _DetailsState createState() => _DetailsState();
+  _NextPageState createState() => _NextPageState();
 }
 
-class _DetailsState extends State<Details> {
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _heightController = TextEditingController();
-  final TextEditingController _weightController = TextEditingController();
-  String? _selectedGender;
+class _NextPageState extends State<NextPage> {
+  double? bmi;
+  double? bmr;
+  String? fitnessGoal;
+  String? bmiCategory;
 
-  String getGreeting() {
-    var hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
+  @override
+  void initState() {
+    super.initState();
+    calculateBMI();
+    calculateBMR();
   }
 
-  Future<void> saveDetails() async {
-    final age = int.tryParse(_ageController.text);
-    final height = int.tryParse(_heightController.text);
-    final weight = int.tryParse(_weightController.text);
+  void calculateBMI() {
+    double heightInMeters = widget.height / 100;
+    bmi = widget.weight / (heightInMeters * heightInMeters);
+    setState(() {
+      if (bmi! < 18.5) {
+        bmiCategory = 'Underweight';
+      } else if (bmi! >= 18.5 && bmi! <= 24.9) {
+        bmiCategory = 'Normal';
+      } else if (bmi! >= 25 && bmi! <= 29.9) {
+        bmiCategory = 'Overweight';
+      } else {
+        bmiCategory = 'Obese';
+      }
+    });
+  }
 
-    if (age == null || height == null || weight == null || _selectedGender == null) {
+  void calculateBMR() {
+    if (widget.gender == 'Male') {
+      bmr = 10 * widget.weight + 6.25 * widget.height - 5 * widget.age + 5;
+    } else {
+      bmr = 10 * widget.weight + 6.25 * widget.height - 5 * widget.age - 161;
+    }
+  }
+
+  Future<void> saveFitnessData() async {
+    if (fitnessGoal == null) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: const Text('Please fill in all fields.'),
+          content: const Text('Please select a fitness goal.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -49,26 +79,33 @@ class _DetailsState extends State<Details> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.74:4000/details'),
+        Uri.parse('http://192.168.1.74:4000/details/fitness'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'age': age,
-          'height': height,
-          'weight': weight,
-          'gender': _selectedGender,
+          'age': widget.age,
+          'height': widget.height,
+          'weight': widget.weight,
+          'gender': widget.gender,
+          'bmi': bmi,
+          'bmr': bmr,
+          'fitnessGoal': fitnessGoal,
         }),
       );
 
       if (response.statusCode == 201) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NextPage(
-              age: age,
-              height: height,
-              weight: weight,
-              gender: _selectedGender!,
-            ),
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success'),
+            content: const Text('Fitness data saved successfully!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
           ),
         );
       } else {
@@ -76,7 +113,7 @@ class _DetailsState extends State<Details> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Error'),
-            content: const Text('Failed to save details. Please try again.'),
+            content: const Text('Failed to save fitness data. Please try again.'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -118,39 +155,41 @@ class _DetailsState extends State<Details> {
           children: [
             const SizedBox(height: 60),
             Text(
-              getGreeting(),
+              'BMI: ${bmi?.toStringAsFixed(2)}',
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.teal,
               ),
             ),
-            const Text(
-              'Bijay',
-              style: TextStyle(
-                fontSize: 32,
+            Text(
+              'Category: $bmiCategory',
+              style: const TextStyle(
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.teal,
+              ),
+            ),
+            Text(
+              'BMR: ${bmr?.toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
               ),
             ),
             const SizedBox(height: 30),
             const Text(
-              'Fill your general information',
+              'Select your fitness goal',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
             const SizedBox(height: 20),
-            _buildInputField('Age', controller: _ageController),
-            const SizedBox(height: 15),
-            _buildInputField('Height (in cm)', controller: _heightController),
-            const SizedBox(height: 15),
-            _buildInputField('Weight (in kg)', controller: _weightController),
-            const SizedBox(height: 15),
             DropdownButtonFormField<String>(
               decoration: InputDecoration(
-                labelText: 'Gender',
+                labelText: 'Fitness Goal',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -160,19 +199,19 @@ class _DetailsState extends State<Details> {
                 ),
               ),
               items: const [
-                DropdownMenuItem(value: 'Male', child: Text('Male')),
-                DropdownMenuItem(value: 'Female', child: Text('Female')),
-                DropdownMenuItem(value: 'Other', child: Text('Other')),
+                DropdownMenuItem(value: 'Muscle Building', child: Text('Muscle Building')),
+                DropdownMenuItem(value: 'Weight Loss', child: Text('Weight Loss')),
+                DropdownMenuItem(value: 'Maintain Weight', child: Text('Maintain Weight')),
               ],
               onChanged: (value) {
                 setState(() {
-                  _selectedGender = value;
+                  fitnessGoal = value;
                 });
               },
             ),
             const Spacer(),
             ElevatedButton(
-              onPressed: saveDetails,
+              onPressed: saveFitnessData,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal,
                 minimumSize: const Size(double.infinity, 50),
@@ -181,7 +220,7 @@ class _DetailsState extends State<Details> {
                 ),
               ),
               child: const Text(
-                'Next',
+                'Done',
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.white,
@@ -192,23 +231,6 @@ class _DetailsState extends State<Details> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildInputField(String label, {required TextEditingController controller}) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 15,
-        ),
-      ),
-      keyboardType: TextInputType.number,
     );
   }
 }

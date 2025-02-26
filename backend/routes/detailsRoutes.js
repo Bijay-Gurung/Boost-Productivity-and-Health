@@ -24,4 +24,50 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/fitness', async (req, res) => {
+  const { age, height, weight, gender, bmi, bmr, fitnessGoal } = req.body;
+
+  if (!age || !height || !weight || !gender || !bmi || !bmr || !fitnessGoal) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  try {
+    const newFitnessData = new Details({
+      age,
+      height,
+      weight,
+      gender,
+      bmi,
+      bmr,
+      fitnessGoal,
+    });
+
+    await newFitnessData.save();
+    res.status(201).json({ message: 'Fitness data saved successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
+router.get('/', async (req, res) => {
+  try {
+    const details = await Details.find();
+    res.status(200).json(details);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  try {
+    const detail = await Details.findById(req.params.id);
+    if (!detail) {
+      return res.status(404).json({ message: 'Details not found' });
+    }
+    res.status(200).json(detail);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});
+
 module.exports = router;
