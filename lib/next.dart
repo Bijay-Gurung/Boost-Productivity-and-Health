@@ -9,12 +9,12 @@ class NextPage extends StatefulWidget {
   final String gender;
 
   const NextPage({
-    Key? key,
+    super.key,
     required this.age,
     required this.height,
     required this.weight,
     required this.gender,
-  }) : super(key: key);
+  });
 
   @override
   _NextPageState createState() => _NextPageState();
@@ -79,7 +79,7 @@ class _NextPageState extends State<NextPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.74:4000/details/fitness'),
+        Uri.parse('http://10.22.1.188:4000/details/fitness'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'age': widget.age,

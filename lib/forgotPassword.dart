@@ -103,7 +103,7 @@ class _VerifyOTPScreenState extends State<VerifyOTP> {
   bool _isLoading = false;
 
   Future<void> _verifyOTP() async {
-    final url = Uri.parse('http://192.168.1.74:4000/forgot-password/verify-otp');
+    final url = Uri.parse('http://10.22.1.188:4000/forgot-password/verify-otp');
 
     if (_otpController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
