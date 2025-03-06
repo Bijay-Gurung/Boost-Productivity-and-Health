@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const path = require('path');
+
 const signupRouter = require('./routes/signupRoutes.js');
 const loginRouter = require('./routes/loginRoutes.js');
 const taskManagerRouter = require('./routes/taskManagerRoutes.js');
@@ -12,7 +14,10 @@ const exerciseRoutes = require('./routes/exerciseRoutes.js');
 const app = express();
 const PORT = 4000;
 
+const uploadsDir = path.join(__dirname, 'uploads');
+
 app.use(bodyParser.json());
+app.use('/uploads', express.static(uploadsDir));
 
 app.use('/signup', signupRouter);
 app.use('/login', loginRouter);

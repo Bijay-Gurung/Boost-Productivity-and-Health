@@ -1,4 +1,6 @@
-const ExerciseSchema = new mongoose.Schema({
+const mongoose = require('mongoose');
+
+const exerciseSchema = new mongoose.Schema({
     name: { type: String, required: true },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'ExerciseCategory', required: true },
     caloriesPerSet: { type: Number, required: true },
@@ -8,4 +10,4 @@ const ExerciseSchema = new mongoose.Schema({
     defaultReps: { type: Number, default: 12 }
   });
   
-  module.exports = mongoose.model('Exercise', ExerciseSchema);
+  module.exports = mongoose.model('Exercise', exerciseSchema);
