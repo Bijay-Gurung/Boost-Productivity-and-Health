@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import "./signup.css";
 
 export default function Signup(){
     const [name, setName] = useState('');
@@ -9,8 +10,8 @@ export default function Signup(){
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
-        e.preventDefalut();
-        axios.post("http://localhost:4000/adminSignup", {name, email, password})
+        e.preventDefault();
+        axios.post("http://localhost:4000/adminSignup", {adminName: name, email, password})
         .then(result => {
             console.log(result);
             navigate("/");
@@ -31,7 +32,7 @@ export default function Signup(){
                     <br />
                     <div className="aha">
                         <p>Already have an account</p>
-                        <Link to="/">Login</Link>
+                        <Link to="/" className="login">Login</Link>
                     </div>
                     <br />
                     <button type="submit">Signup</button>

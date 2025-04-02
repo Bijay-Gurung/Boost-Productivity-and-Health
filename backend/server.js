@@ -19,7 +19,7 @@ const PORT = 4000;
 
 app.use(bodyParser.json());
 app.use(cors({
-  origin: "http://localhost:5173/",
+  origin: "http://localhost:5173",
 }));
 
 const uploadsDir = path.join(__dirname, 'uploads');
