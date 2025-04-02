@@ -5,14 +5,22 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const signupRouter = require('./routes/signupRoutes.js');
+const adminSignupRouter = require('./routes/adminSignupRoutes.js');
 const loginRouter = require('./routes/loginRoutes.js');
 const taskManagerRouter = require('./routes/taskManagerRoutes.js');
 const PasswordResetRouter = require('./routes/passwordResetRoutes.js');
 const detailsRoutes = require('./routes/detailsRoutes.js');
 const exerciseRoutes = require('./routes/exerciseRoutes.js');
 
+const cors = require('cors');
+
 const app = express();
 const PORT = 4000;
+
+app.use(bodyParser.json());
+app.use(cors({
+  origin: "http://localhost:5173/",
+}));
 
 const uploadsDir = path.join(__dirname, 'uploads');
 
@@ -20,6 +28,7 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static(uploadsDir));
 
 app.use('/signup', signupRouter);
+app.use('/adminSignup', adminSignupRouter);
 app.use('/login', loginRouter);
 app.use('/taskManager', taskManagerRouter);
 app.use('/forgot-password', PasswordResetRouter);
