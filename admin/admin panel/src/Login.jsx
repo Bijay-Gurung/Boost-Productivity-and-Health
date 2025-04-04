@@ -15,7 +15,12 @@ export default function Login(){
             const response = await axios.post('http://localhost:4000/adminLogin', { email, password });
             if (response.data.message === "Login successful") {
                 console.log('Login successful:', response.data);
-                navigate('/home');
+                navigate('/home', {
+                    state: {
+                        adminName: response.data.admin.adminName, 
+                        email: response.data.admin.email 
+                    } 
+                });
             }
         } catch (error) {
             if (error.response) {
