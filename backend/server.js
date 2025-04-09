@@ -12,6 +12,7 @@ const taskManagerRouter = require('./routes/taskManagerRoutes.js');
 const PasswordResetRouter = require('./routes/passwordResetRoutes.js');
 const detailsRoutes = require('./routes/detailsRoutes.js');
 const exerciseRoutes = require('./routes/exerciseRoutes.js');
+const mealRouter = require('./routes/mealRouter.js');
 
 const cors = require('cors');
 
@@ -36,6 +37,7 @@ app.use('/taskManager', taskManagerRouter);
 app.use('/forgot-password', PasswordResetRouter);
 app.use('/details', detailsRoutes);
 app.use('/exercises', exerciseRoutes);
+app.use('/meal', mealRouter);
 
 mongoose.connect('mongodb://localhost:27017/BoostProductivityAndHealth')
   .then(() => console.log('Connected to MongoDB'))
