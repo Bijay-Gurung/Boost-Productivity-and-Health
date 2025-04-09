@@ -36,7 +36,7 @@ app.use('/adminLogin', adminLoginRouter);
 app.use('/taskManager', taskManagerRouter);
 app.use('/forgot-password', PasswordResetRouter);
 app.use('/details', detailsRoutes);
-app.use('/exercises', exerciseRoutes);
+app.use('/exercise', exerciseRoutes);
 app.use('/meal', mealRouter);
 
 mongoose.connect('mongodb://localhost:27017/BoostProductivityAndHealth')

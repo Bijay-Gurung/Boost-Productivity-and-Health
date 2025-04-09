@@ -4,6 +4,7 @@ import Signup from './Signup';
 import Login from './Login';
 import Home from './Home';
 import Meal from './Meal';
+import Exercise from './exercise';
 
 function App() {
   const router = createBrowserRouter([
@@ -22,6 +23,10 @@ function App() {
     {
       path: '/meal',
       element: <Meal />
+    },
+    {
+      path: '/exercise',
+      element: <Exercise />
     }
   ]);
 

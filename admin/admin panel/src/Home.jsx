@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import "./home.css";
-import "./Meal";
 import {useNavigate, useLocation} from 'react-router-dom';
 
 function Nav({adminName, email}){
@@ -41,12 +40,16 @@ function SideNav({ adminName, email }){
         navigate('/meal', { state: { adminName, email } });
     }
 
+    const handleExercise = () => {
+        navigate('/exercise', {state: {adminName, email}});
+    }
+
     return(
         <div className='section'>
             <div className='sideNav'>
                 <div className='features'>
                     <button className='btn dashboard' onClick={handleDashboard}>Dashboard</button><br/>
-                    <button className='btn exercise' onClick={handleDashboard}>Exercise</button><br/>
+                    <button className='btn exercise' onClick={handleExercise}>Exercise</button><br/>
                     <button className='btn mealPlan' onClick={handleMeal}>Meal Plan</button><br/>
                     <button className='btn settings' onClick={handleDashboard}>Settings</button>
                 </div>

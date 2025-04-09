@@ -1,72 +1,102 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
 const Exercise = require('../models/exercise');
-const ExerciseCategory = require('../models/exerciseCategory');
-
+const multer = require("multer");
+const path = require("path");
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage });
-
-router.post('/categories', async (req, res) => {
-  try {
-    const { name, parentCategory, type } = req.body;
-    const category = new ExerciseCategory({ name, parentCategory, type });
-    await category.save();
-    res.status(201).json({ message: "Category added successfully", category });
-  } catch (error) {
-    res.status(500).json({ message: "Error adding category", error });
-  }
-});
-
-router.post('/exercises', upload.single('media'), async (req, res) => {
-  try {
-    const { name, category, caloriesPerSet, steps } = req.body;
-    const media = req.file ? req.file.path : null;
-
-    const exercise = new Exercise({ name, category, caloriesPerSet, steps, media });
-    await exercise.save();
-    
-    res.status(201).json({ message: "Exercise added successfully", exercise });
-  } catch (error) {
-    res.status(500).json({ message: "Error adding exercise", error });
-  }
-});
-
-router.get('/exercises', async (req, res) => {
-    try {
-      const exercises = await Exercise.find().populate('category');
-      res.json(exercises);
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching exercises", error });
+    destination: function (req, file, cb) {
+        cb(null, "uploads/");
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + "-" + file.originalname;
+        cb(null, uniqueSuffix);
     }
-  });
-  
-
-router.get('/categories', async (req, res) => {
-  try {
-    const categories = await ExerciseCategory.find().populate('parentCategory');
-    res.json(categories);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching categories", error });
-  }
 });
 
-router.get('/exercises/:categoryId', async (req, res) => {
-  try {
-    const exercises = await Exercise.find({ category: req.params.categoryId });
-    res.json(exercises);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching exercises", error });
-  }
+const upload = multer({ storage: storage });
+
+router.post("/", upload.single("image"), async (req, res) => {
+    try {
+        const {
+            name,
+            category,
+            muscleGroup,
+            duration,
+            caloriesBurned,
+            intensity,
+            steps,
+            recommendedFor
+        } = req.body;
+
+        const image = req.file ? req.file.path : "";
+
+        const exercise = new Exercise({
+            name,
+            category,
+            muscleGroup,
+            duration,
+            caloriesBurned,
+            intensity,
+            steps,
+            image,
+            recommendedFor: recommendedFor ? JSON.parse(recommendedFor) : undefined
+        });
+
+        await exercise.save();
+        res.status(201).json({ message: "Exercise created successfully", exercise });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to create exercise" });
+    }
+});
+
+router.get("/", async (req, res) => {
+    try {
+        const exercises = await Exercise.find();
+        res.status(200).json(exercises);
+    } catch (err) {
+        res.status(500).json({ error: "Failed to fetch exercises" });
+    }
+});
+
+router.get("/:id", async (req, res) => {
+    try {
+        const exercise = await Exercise.findById(req.params.id);
+        if (!exercise) return res.status(404).json({ error: "Exercise not found" });
+
+        res.status(200).json(exercise);
+    } catch (err) {
+        res.status(500).json({ error: "Error fetching exercise" });
+    }
+});
+
+router.put("/:id", upload.single("image"), async (req, res) => {
+    try {
+        const image = req.file ? req.file.path : undefined;
+        const updatedData = {
+            ...req.body,
+            ...(image && { image }),
+            ...(req.body.recommendedFor && { recommendedFor: JSON.parse(req.body.recommendedFor) })
+        };
+
+        const updatedExercise = await Exercise.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+        if (!updatedExercise) return res.status(404).json({ error: "Exercise not found" });
+
+        res.status(200).json({ message: "Exercise updated", exercise: updatedExercise });
+    } catch (err) {
+        res.status(500).json({ error: "Error updating exercise" });
+    }
+});
+
+router.delete("/:id", async (req, res) => {
+    try {
+        const deleted = await Exercise.findByIdAndDelete(req.params.id);
+        if (!deleted) return res.status(404).json({ error: "Exercise not found" });
+
+        res.status(200).json({ message: "Exercise deleted" });
+    } catch (err) {
+        res.status(500).json({ error: "Error deleting exercise" });
+    }
 });
 
 module.exports = router;

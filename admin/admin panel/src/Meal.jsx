@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import "./meal.css";
-import "./Home";
 import axios from 'axios';
 import {Link, useNavigate, useLocation} from 'react-router-dom';
 
@@ -40,6 +39,10 @@ function SideNav({ adminName, email }){
 
     const handleMeal = () => {
         navigate('/meal');
+    }
+
+    const handleExercise = () => {
+        navigate('/exercise', {state:{adminName, email}});
     }
 
     const [recipe, setRecipe] = useState('');
@@ -95,7 +98,7 @@ function SideNav({ adminName, email }){
             <div className='sideNav'>
                 <div className='features'>
                     <button className='btn dashboard' onClick={handleDashboard}>Dashboard</button><br/>
-                    <button className='btn exercise' onClick={handleDashboard}>Exercise</button><br/>
+                    <button className='btn exercise' onClick={handleExercise}>Exercise</button><br/>
                     <button className='btn mealPlan' onClick={handleMeal}>Meal Plan</button><br/>
                     <button className='btn settings' onClick={handleDashboard}>Settings</button>
                 </div>

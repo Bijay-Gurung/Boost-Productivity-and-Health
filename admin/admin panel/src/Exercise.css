@@ -1,0 +1,83 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+.Nav{
+    display: flex;
+    color: #d0cdcd;
+    margin-left: 10px;
+}
+
+.Nav .userProfile{
+    padding-top: 10px;
+    display: flex;
+}
+
+.Nav .userProfile .adminPhoto{
+    height: 45px;
+    width: 45px;
+    border: none;
+    border-radius: 90px;
+    background-color: #fff;
+}
+
+.Nav .userProfile .adminDetails{
+    margin-left: 15px;
+}
+
+.Nav .userProfile .adminDetails h3{
+    font-size: small;
+}
+
+.Nav .userProfile .adminDetails p{
+    font-size: smaller;
+}
+
+.Nav h2{
+    padding-top: 10px;
+    padding-left: 28%;
+}
+
+.Nav .logout{
+    color: #000;
+    text-decoration: none;
+    background-color: #fff;
+    border-radius: 9px;
+    height: 30px;
+    width: 80px;
+    padding-top: 3px;
+    padding-left: 11px;
+    margin-top: 10px;
+    margin-left: 40%;
+}
+
+.sideNav{
+    position: relative;
+    top: 5px;
+    height: 680px;
+    width: 200px;
+    background-color: #ffffff05;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(25px);
+}
+
+.sideNav .btn{
+    background-color: #fff;
+    padding-right: 20px;
+    border: none;
+    height: 35px;
+    width: 200px;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+.content h1{
+    color: #fff;
+    padding-left: 550px;
+}
+
+.section{
+    display: flex;
+}
