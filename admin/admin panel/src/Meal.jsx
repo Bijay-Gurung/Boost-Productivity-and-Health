@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import "./home.css";
-import "./Meal";
-import {useNavigate, useLocation} from 'react-router-dom';
+import "./meal.css";
+import "./Home";
+import {Link, useNavigate, useLocation} from 'react-router-dom';
 
 function Nav({adminName, email}){
     const navigate = useNavigate();
@@ -38,7 +38,7 @@ function SideNav({ adminName, email }){
     }
 
     const handleMeal = () => {
-        navigate('/meal', { state: { adminName, email } });
+        navigate('/meal');
     }
 
     return(
@@ -53,13 +53,13 @@ function SideNav({ adminName, email }){
             </div>
 
             <div className='content'>
-            <h1>Dashboard</h1>
+            <h1>Meal Plan</h1>
             </div>
         </div>
     );
 }
 
-export default function Home(){
+export default function Meal(){
     const location = useLocation();
     const navigate = useNavigate();
 
