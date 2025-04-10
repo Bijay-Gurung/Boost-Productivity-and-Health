@@ -73,11 +73,89 @@
     border-radius: 5px;
 }
 
-.content h1{
-    color: #fff;
-    padding-left: 550px;
-}
-
 .section{
     display: flex;
+}
+
+.section .content .total{
+    margin-top: 50px;
+    margin-left: 20px;
+    display: flex;
+}
+
+.section .content .total .totalUser{
+    height: 100px;
+    width: 100px;
+    background-color: #fff;
+    border-radius: 9px;
+}
+
+.section .content .total .totalExercise{
+    height: 100px;
+    width: 100px;
+    background-color: #fff;
+    border-radius: 9px;
+    margin-left: 50px;
+}
+
+.section .content .total .totalMeal{
+    height: 100px;
+    width: 100px;
+    background-color: #fff;
+    border-radius: 9px;
+    margin-left: 50px;
+}
+
+.section .content .total .totalUser h3{
+    text-align: center;
+}
+
+.section .content .total .totalUser p{
+    text-align: center;
+}
+
+.section .content .total .totalExercise h3{
+    text-align: center;
+}
+
+.section .content .total .totalExercise p{
+    text-align: center;
+}
+
+.section .content .total .totalMeal h3{
+    text-align: center;
+}
+
+.section .content .total .totalMeal p{
+    text-align: center;
+}
+
+.section .content .userData{
+    height: 400px;
+    width: 450px;
+    border-radius: 9px;
+    border: none;
+    background-color: #ffffff05;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 2px 2px 8px 2px #4c4c4c;
+    color: #fff;
+    position: relative;
+    left: 130%;
+    bottom: 20%;
+}
+
+.section .content .userData h2{
+    text-align: center;
+}
+
+.section .content .userData tbody tr td button{
+    height: 30px;
+    width: 50px;
+    margin-left: 10px;
+    border-radius: 9px;
+}
+
+.section .content .userData tbody tr td{
+    margin-left: 10px;
 }
