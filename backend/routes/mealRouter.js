@@ -57,4 +57,33 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.put('/:id', upload.single('image'), async (req, res) => {
+    try {
+        const updates = {
+            ...req.body,
+            ...(req.file && { image: req.file.path }),
+            date: new Date(req.body.date)
+        };
+
+        // Convert string boolean to actual boolean
+        if (typeof updates.isVegan === 'string') {
+            updates.isVegan = updates.isVegan === 'true';
+        }
+
+        const updatedMeal = await Recipe.findByIdAndUpdate(
+            req.params.id,
+            updates,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedMeal) {
+            return res.status(404).json({ message: 'Meal not found' });
+        }
+        res.json(updatedMeal);
+    } catch (error) {
+        console.error('Error updating recipe:', error);
+        res.status(400).json({ message: 'Error updating recipe', error: error.message });
+    }
+});
+
 module.exports = router;

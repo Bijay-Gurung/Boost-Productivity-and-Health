@@ -51,7 +51,6 @@ function SideNav({ adminName, email }){
                     <button className='btn dashboard' onClick={handleDashboard}>Dashboard</button><br/>
                     <button className='btn exercise' onClick={handleExercise}>Exercise</button><br/>
                     <button className='btn mealPlan' onClick={handleMeal}>Meal Plan</button><br/>
-                    <button className='btn settings' onClick={handleDashboard}>Settings</button>
                 </div>
             </div>
 

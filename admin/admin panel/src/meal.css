@@ -81,3 +81,121 @@
 .section{
     display: flex;
 }
+
+.section .mealView{
+    height: 400px;
+    width: 400px;
+    border: none;
+    border-radius: 9px;
+    background-color: #ffffff05;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 2px 2px 8px 2px #4c4c4c;
+    position: relative;
+    top: 20px;
+    left: 30%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.section .mealContent{
+    color: #fff;
+    position: relative;
+    left: 50px;
+}
+
+.section .mealContent input{
+    height: 30px;
+    width: 200px;
+    border: none;
+    border-radius: 9px;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+
+.section .mealContent textarea{
+    height: 90px;
+    width: 200px;
+    border: none;
+    border-radius: 9px;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+
+.section .mealContent .Right input{
+    height: 30px;
+    width: 200px;
+    color: #000;
+    background-color: #fff;
+    border-radius: 9px;
+    border: none;
+    padding-top: 5px;
+    padding-left: 5px;
+    margin-top: 20px;
+}
+
+.section .mealContent .Right select{
+    height: 30px;
+    width: 200px;
+    border: none;
+    border-radius: 9px;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+
+.section .mealContent .Right label{
+    position: relative;
+    right: 70px;
+}
+
+.section .mealContent .Right button{
+    height: 30px;
+    width: 90px;
+    border: none;
+    border-radius: 9px;
+}
+
+.section .mealContent .Right{
+    position: relative;
+    left: 300px;
+    bottom: 540px;
+}
+
+.section .mealContent .Right .submitbtn{
+    width: 120px;
+    padding-left: 5px;
+    margin-top: 10px;
+}
+
+.section .mealContent .Right .cancelbtn{
+    margin-left: 20px;
+}
+
+.section .mealView{
+    color: #fff;
+}
+
+.section .mealView h2{
+    text-align: center;
+}
+
+.section .mealView img{
+    height: 100px;
+    width: 100px;
+    border-radius: 9px;
+    margin-top: 20px;
+    margin-left: 130px;
+}
+
+.section .mealView .mealInfo{
+    position: relative;
+    left: 27%;
+}
+
+.section .mealView .mealInfo button{
+    height: 30px;
+    width: 90px;
+    border-radius: 9px;
+    margin-top: 5px;
+    margin-left: 10px;
+}

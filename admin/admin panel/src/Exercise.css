@@ -81,3 +81,113 @@
 .section{
     display: flex;
 }
+
+.section .content .left input{
+    height: 30px;
+    width: 200px;
+    border: none;
+    border-radius: 9px;
+    padding-left: 10px;
+    margin-top: 20px;
+}
+
+::placeholder{
+    opacity: 1;
+    color: #000;
+}
+
+.section .content .left select{
+    height: 30px;
+    width: 200px;
+    border: none;
+    border-radius: 9px;
+    padding-left: 10px;
+    margin-top: 20px;
+}
+
+.section .content .left textarea{
+    height: 90px;
+    width: 200px;
+    border: none;
+    border-radius: 9px;
+    padding-left: 10px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.section .content .right input{
+    height: 30px;
+    width: 200px;
+    background-color: #fff;
+    border-radius: 9px;
+    border: none;
+    padding-top: 5px;
+    padding-left: 5px;
+    margin-top: 20px;
+}
+
+.section .content .right select{
+    height: 30px;
+    width: 200px;
+    border: none;
+    border-radius: 9px;
+    padding-left: 10px;
+    margin-top: 20px;
+}
+
+.section .content .right button{
+    height: 30px;
+    width: 120px;
+    border: none;
+    border-radius: 9px;
+    background-color: #fff;
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+.section .content{
+    position: relative;
+    left: 140px;
+}
+
+.section .View{
+    height: 400px;
+    width: 400px;
+    border: none;
+    border-radius: 9px;
+    background-color: #ffffff05;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: 2px 2px 8px 2px #4c4c4c;
+    position: relative;
+    top: 20px;
+    left: 30%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.section .View h2{
+    color: #fff;
+    text-align: center;
+}
+
+.section .View .exerciseGrid .exerciseInfo{
+    color: #fff;
+    padding-top: 25px;
+    padding-left: 50px;
+}
+
+.section .View .exerciseGrid .exerciseInfo button{
+    height: 30px;
+    width: 90px;
+    margin-left: 10px;
+    border-radius: 9px;
+}
+
+.section .View .exerciseGrid img{
+    height: 100px;
+    width: 100px;
+    border-radius: 9px;
+    margin-top: 10px;
+    margin-left: 40px;
+}
