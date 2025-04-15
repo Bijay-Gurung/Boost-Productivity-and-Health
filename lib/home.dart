@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
 import 'login.dart';
+import 'DietaryPreferences.dart';
 
 class HomePage extends StatelessWidget {
   final String userName;
@@ -106,6 +107,14 @@ class HomePage extends StatelessWidget {
               children: [
                 Expanded(
                   child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DietaryPreferencesScreen(userName: userName),
+                          ),
+                          );
+                    },
                     child: const FeatureCard(
                       title: 'Meal Planning',
                       imagePath: 'assets/mealPlanning.jpg',
