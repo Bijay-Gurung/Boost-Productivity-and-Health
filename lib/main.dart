@@ -7,6 +7,9 @@ import 'details.dart';
 import 'next.dart';
 import 'DietaryPreferences.dart';
 import 'MealCategories.dart';
+import 'MealListScreen.dart';
+import 'MealDetailsScreen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -30,17 +33,41 @@ class MyApp extends StatelessWidget {
           return HomePage(userName: args['userName']!, email: args['email']!);
         },
         '/taskManager': (context) => TaskManagerScreen(),
-        '/details': (context) => Details(),
-        '/dietaryPreferences': (context) {
+        '/details': (context){
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-          return DietaryPreferencesScreen(userName: args['userName']!,);
+          return Details(userName: args['userName']!,);
+        },
+
+        '/dietaryPreferences': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return DietaryPreferencesScreen(userName: args['userName']!);
         },
         
         '/mealCategories': (context) {
-          final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-          return MealCategoriesScreen(userName: args['userName']!,);
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return MealCategoriesScreen(
+            userName: args['userName']!,
+            isVegan: args['isVegan'] as bool,
+          );
         },
-        
+
+        '/mealList': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return MealListScreen(
+            userName: args['userName']!,
+            category: args['category']!,
+            isVegan: args['isVegan'] as bool,
+          );
+        },
+
+        '/mealDetail': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return MealDetailsScreen(
+            userName: args['userName']!,
+            meal: args['meal']!,
+          );
+        },
+
         '/next': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return NextPage(

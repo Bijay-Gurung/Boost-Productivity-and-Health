@@ -48,14 +48,20 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    try{
-        const recipes = await Recipe.find();
-        res.json(recipes);
-    }catch (error){
-        console.error('Error retrieving recipes:', error);
-        res.status(500).json({message: 'Error retrieving recipes', error: error.message});
+    try {
+      const { category, search, isVegan } = req.query;
+      const query = {};
+  
+      if (category) query.category = category;
+      if (search) query.recipe = { $regex: search, $options: 'i' };
+      if (isVegan !== undefined) query.isVegan = isVegan === 'true';
+  
+      const recipes = await Recipe.find(query);
+      res.json(recipes);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error: error.message });
     }
-});
+  });
 
 router.put('/:id', upload.single('image'), async (req, res) => {
     try {

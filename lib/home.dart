@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const Details()),
+                        MaterialPageRoute(builder: (context) => Details(userName: userName,)),
                       );
                     },
                     child: const FeatureCard(

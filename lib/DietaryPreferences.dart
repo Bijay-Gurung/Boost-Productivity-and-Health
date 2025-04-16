@@ -76,13 +76,16 @@ class DietaryPreferencesScreen extends StatelessWidget {
                 backgroundColor: Colors.black,
               ),
               onPressed: () {
-                Navigator.push(
+                Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => MealCategoriesScreen(userName: userName),
-                  ),
-                  );
+                  '/mealCategories',
+                  arguments: {
+                    'userName': userName,
+                    'isVegan': true,
+                  },
+                );
               },
+
               child: const Text(
                 'Vegetarian',
                 style: TextStyle(
@@ -99,14 +102,18 @@ class DietaryPreferencesScreen extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
               ),
+
               onPressed: () {
-                Navigator.push(
+                Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => MealCategoriesScreen(userName: userName),
-                  ),
-                  );
+                  '/mealCategories',
+                  arguments: {
+                    'userName': userName,
+                    'isVegan': false,
+                  },
+                );
               },
+
               child: const Text(
                 'Non-Vegetarian',
                 style: TextStyle(
@@ -165,7 +172,7 @@ class DietaryPreferencesScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Details()),
+                MaterialPageRoute(builder: (context) => Details(userName: userName,)),
               );
             },
             child: const Text('Exercise'),

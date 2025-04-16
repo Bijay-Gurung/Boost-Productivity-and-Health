@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'next.dart';
 
 class Details extends StatefulWidget {
-  const Details({super.key});
+  final String userName;
+  const Details({super.key, required this.userName});
 
   @override
   _DetailsState createState() => _DetailsState();
@@ -17,10 +18,11 @@ class _DetailsState extends State<Details> {
   String? _selectedGender;
 
   String getGreeting() {
-    var hour = DateTime.now().hour;
+    final hour = DateTime.now().hour;
     if (hour < 12) return 'Good Morning';
     if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
+    if (hour < 21) return 'Good Evening';
+    return 'Good Night';
   }
 
   Future<void> saveDetails() async {
@@ -125,8 +127,8 @@ class _DetailsState extends State<Details> {
                 color: Colors.teal,
               ),
             ),
-            const Text(
-              'Bijay',
+            Text(
+              widget.userName,
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,

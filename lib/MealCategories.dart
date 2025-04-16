@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/MealListScreen.dart';
 import 'home.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
 
 class MealCategoriesScreen extends StatelessWidget {
   final String userName;
+  final bool isVegan;
 
-  const MealCategoriesScreen({super.key, required this.userName});
+  const MealCategoriesScreen({super.key, required this.userName, required this.isVegan,});
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
@@ -35,14 +37,13 @@ class MealCategoriesScreen extends StatelessWidget {
                   _getGreeting(),
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.white70,
+                    color: Colors.black,
                   ),
                 ),
                 Text(
                   userName,
                   style: const TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -62,16 +63,16 @@ class MealCategoriesScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildMealCard('Breakfast', 'assets/Breakfast.jpg'),
-              _buildMealCard('Meal', 'assets/Meal.jpg'),
+              _buildMealCard(context, 'Breakfast', 'assets/Breakfast.jpg'),
+              _buildMealCard(context, 'Meal', 'assets/Meal.jpg'),
             ],
           ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildMealCard('Dinner', 'assets/Dinner.jpg'),
-              const SizedBox(width: 160), // Empty space to maintain alignment
+              _buildMealCard(context, 'Dinner', 'assets/Dinner.jpg'),
+              const SizedBox(width: 160),
             ],
           ),
         ],
@@ -80,8 +81,20 @@ class MealCategoriesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMealCard(String title, String imagePath) {
-    return Column(
+  Widget _buildMealCard(BuildContext context, String title, String imagePath) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.pushNamed(
+        context,
+        '/mealList',
+        arguments: {
+          'userName': userName,
+          'category': title,
+          'isVegan': isVegan,
+        },
+      );
+    },
+    child: Column(
       children: [
         Container(
           width: 160,
@@ -111,8 +124,9 @@ class MealCategoriesScreen extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildFooter(BuildContext context) {
     return Container(
@@ -157,7 +171,7 @@ class MealCategoriesScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Details()),
+                MaterialPageRoute(builder: (context) => Details(userName: userName,)),
               );
             },
             child: const Text('Exercise'),
