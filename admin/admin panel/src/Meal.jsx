@@ -213,7 +213,7 @@ function SideNav({ adminName, email }) {
                         <select value={category} onChange={(e) => setCategory(e.target.value)} required>
                             <option value="Breakfast">Breakfast</option>
                             <option value="Meal">Meal</option>
-                            <option value="Dessert">Dessert</option>
+                            <option value="Dessert">Dinner</option>
                         </select><br/>
 
                         <textarea value={details} placeholder="Recipe Details" 

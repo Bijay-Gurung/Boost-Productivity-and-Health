@@ -6,6 +6,7 @@ import 'taskManagerScreen.dart';
 import 'details.dart';
 import 'next.dart';
 import 'DietaryPreferences.dart';
+import 'MealCategories.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -34,6 +35,12 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
           return DietaryPreferencesScreen(userName: args['userName']!,);
         },
+        
+        '/mealCategories': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+          return MealCategoriesScreen(userName: args['userName']!,);
+        },
+        
         '/next': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return NextPage(

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/MealCategories.dart';
 import 'home.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
 
-class DietaryPreferencesScreen extends StatelessWidget {
+class MealCategoriesScreen extends StatelessWidget {
   final String userName;
 
-  const DietaryPreferencesScreen({super.key, required this.userName});
+  const MealCategoriesScreen({super.key, required this.userName});
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
@@ -36,13 +35,14 @@ class DietaryPreferencesScreen extends StatelessWidget {
                   _getGreeting(),
                   style: const TextStyle(
                     fontSize: 16,
-                    color: Colors.black,
+                    color: Colors.white70,
                   ),
                 ),
                 Text(
                   userName,
                   style: const TextStyle(
                     fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -57,68 +57,60 @@ class DietaryPreferencesScreen extends StatelessWidget {
         ),
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 40),
-          const Text(
-            'Choose your Dietary Preferences',
-            style: TextStyle(
-              fontSize: 24,
-              color: Colors.black,
-            ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildMealCard('Breakfast', 'assets/Breakfast.jpg'),
+              _buildMealCard('Meal', 'assets/Meal.jpg'),
+            ],
           ),
-          const SizedBox(height: 40),
-          SizedBox(
-            width: 200,
-            height: 45,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MealCategoriesScreen(userName: userName),
-                  ),
-                  );
-              },
-              child: const Text(
-                'Vegetarian',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildMealCard('Dinner', 'assets/Dinner.jpg'),
+              const SizedBox(width: 160), // Empty space to maintain alignment
+            ],
           ),
-          const SizedBox(height: 40),
-          SizedBox(
-            width: 200,
-            height: 45,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MealCategoriesScreen(userName: userName),
-                  ),
-                  );
-              },
-              child: const Text(
-                'Non-Vegetarian',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-                ),
-            ),
-          ),
-          const Spacer(),
-          _buildFooter(context),
         ],
       ),
+      bottomNavigationBar: _buildFooter(context),
+    );
+  }
+
+  Widget _buildMealCard(String title, String imagePath) {
+    return Column(
+      children: [
+        Container(
+          width: 160,
+          height: 160,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: AssetImage(imagePath),
+              fit: BoxFit.cover,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 
