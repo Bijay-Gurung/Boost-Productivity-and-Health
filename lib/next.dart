@@ -7,6 +7,7 @@ class NextPage extends StatefulWidget {
   final int height;
   final int weight;
   final String gender;
+  final String userName;
 
   const NextPage({
     super.key,
@@ -14,6 +15,7 @@ class NextPage extends StatefulWidget {
     required this.height,
     required this.weight,
     required this.gender,
+    required this.userName,
   });
 
   @override
@@ -79,7 +81,7 @@ class _NextPageState extends State<NextPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.22.14.241:4000/details/fitness'),
+        Uri.parse('http://10.22.31.110:4000/details/fitness'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'age': widget.age,

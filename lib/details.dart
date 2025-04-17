@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-import 'next.dart';
 
 class Details extends StatefulWidget {
   final String userName;
   const Details({super.key, required this.userName});
 
   @override
-  _DetailsState createState() => _DetailsState();
+  State<Details> createState() => _DetailsState();
 }
 
 class _DetailsState extends State<Details> {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
@@ -50,9 +51,13 @@ class _DetailsState extends State<Details> {
     }
 
     try {
+      final token = await _storage.read(key: 'auth_token');
       final response = await http.post(
-        Uri.parse('http://10.22.14.241:4000/details'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('http://10.22.31.110:4000/details'),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token ?? '',
+        },
         body: jsonEncode({
           'age': age,
           'height': height,
@@ -61,17 +66,17 @@ class _DetailsState extends State<Details> {
         }),
       );
 
-      if (response.statusCode == 201) {
-        Navigator.push(
+      if (response.statusCode == 200) {
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => NextPage(
-              age: age,
-              height: height,
-              weight: weight,
-              gender: _selectedGender!,
-            ),
-          ),
+          '/next',
+          arguments: {
+            'age': age,
+            'height': height,
+            'weight': weight,
+            'gender': _selectedGender!,
+            'userName': widget.userName,
+          },
         );
       } else {
         showDialog(
@@ -113,6 +118,7 @@ class _DetailsState extends State<Details> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(title: Text('${widget.userName}\'s Details')),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

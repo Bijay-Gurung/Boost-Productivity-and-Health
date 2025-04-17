@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const detailsSchema = new mongoose.Schema({
+  user: {
+    type: String,
+    required: true,
+    unique: true
+  },
   age: {
     type: Number,
     required: true,
@@ -18,21 +23,12 @@ const detailsSchema = new mongoose.Schema({
     enum: ['Male', 'Female', 'Other'],
     required: true,
   },
-  bmi: {
-    type: Number,
-    required: false,
-  },
-  bmr: {
-    type: Number,
-    required: false,
-  },
+  bmi: Number,
+  bmr: Number,
   fitnessGoal: {
     type: String,
     enum: ['Muscle Building', 'Weight Loss', 'Maintain Weight'],
-    required: false,
   },
-});
+}, { timestamps: true });
 
-const Details = mongoose.model('Details', detailsSchema);
-
-module.exports = Details;
+module.exports = mongoose.model('Details', detailsSchema);

@@ -71,10 +71,11 @@ class MyApp extends StatelessWidget {
         '/next': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return NextPage(
-            age: args['age'],
-            height: args['height'],
-            weight: args['weight'],
-            gender: args['gender'],
+            age: args['age'] as int,
+            height: args['height'] as int,
+            weight: args['weight'] as int,
+            gender: args['gender'] as String,
+            userName: args['userName'] as String,
           );
         },
       },
