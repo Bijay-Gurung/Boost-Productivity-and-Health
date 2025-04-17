@@ -14,7 +14,7 @@ class _ForgotPasswordScreenState extends State<ForgotPassword> {
   bool _isLoading = false;
 
   Future<void> _sendOTP() async {
-    final url = Uri.parse('http://192.168.1.74:4000/forgot-password'); 
+    final url = Uri.parse('http://10.22.14.241:4000/forgot-password'); 
 
     if (_emailController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -103,7 +103,7 @@ class _VerifyOTPScreenState extends State<VerifyOTP> {
   bool _isLoading = false;
 
   Future<void> _verifyOTP() async {
-    final url = Uri.parse('http://10.22.1.188:4000/forgot-password/verify-otp');
+    final url = Uri.parse('http://10.22.14.241:4000/forgot-password/verify-otp');
 
     if (_otpController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -195,7 +195,7 @@ class _ResetPasswordScreenState extends State<ResetPassword> {
   bool _isLoading = false;
 
   Future<void> _resetPassword() async {
-    final url = Uri.parse('http://192.168.1.74:4000/forgot-password/reset-password');
+    final url = Uri.parse('http://10.22.14.241:4000/forgot-password/reset-password');
 
     if (_newPasswordController.text.isEmpty || _confirmPasswordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -36,7 +36,7 @@ class TaskManager {
 }
 
 class TaskManagerService {
-  final String baseUrl = 'http://192.168.1.74:4000/taskManager';
+  final String baseUrl = 'http://10.22.14.241:4000/taskManager';
 
   Future<TaskManager> createTask(String task, DateTime dueDate) async {
     try {

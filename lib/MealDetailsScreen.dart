@@ -77,7 +77,7 @@ class MealDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       image: DecorationImage(
                         image: NetworkImage(
-                          'http://192.168.1.74:4000/${meal['image']}',
+                          'http://10.22.14.241:4000/${meal['image']}',
                         ),
                         fit: BoxFit.cover,
                       ),

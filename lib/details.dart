@@ -51,7 +51,7 @@ class _DetailsState extends State<Details> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.74:4000/details'),
+        Uri.parse('http://10.22.14.241:4000/details'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'age': age,

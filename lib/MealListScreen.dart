@@ -47,7 +47,7 @@ class _MealListScreenState extends State<MealListScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-        'http://10.0.2.2:4000/meal?'
+        'http://10.22.14.241:4000/meal?'
         'category=${widget.category}&'
         'isVegan=${widget.isVegan}&'
         'search=$query'
@@ -174,7 +174,7 @@ class _MealListScreenState extends State<MealListScreen> {
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
                       image: NetworkImage(
-                        'http://192.168.1.74:4000/${meal['image']}',
+                        'http://10.22.14.241:4000/${meal['image']}',
                       ),
                       fit: BoxFit.cover,
                     ),
