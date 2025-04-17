@@ -216,7 +216,6 @@ class _DetailsState extends State<Details> {
           vertical: 15,
         ),
       ),
-      keyboardType: TextInputType.number,
     );
   }
 }

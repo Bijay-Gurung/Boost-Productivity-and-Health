@@ -84,10 +84,6 @@ class _NextPageState extends State<NextPage> {
         Uri.parse('http://10.22.31.110:4000/details/fitness'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'age': widget.age,
-          'height': widget.height,
-          'weight': widget.weight,
-          'gender': widget.gender,
           'bmi': bmi,
           'bmr': bmr,
           'fitnessGoal': fitnessGoal,
