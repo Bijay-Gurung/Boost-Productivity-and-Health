@@ -53,7 +53,7 @@ class _DetailsState extends State<Details> {
     try {
       final token = await _storage.read(key: 'auth_token');
       final response = await http.post(
-        Uri.parse('http://10.22.31.110:4000/details'),
+        Uri.parse('http://192.168.1.74:4000/details'),
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': token ?? '',

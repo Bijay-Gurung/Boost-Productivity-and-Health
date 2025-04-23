@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/MealCategories.dart';
-import 'home.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
 

@@ -19,7 +19,7 @@ class _LoginScreenState extends State<Login> {
   bool _isPasswordVisible = false;
 
   Future<void> _login() async {
-    final url = Uri.parse('http://10.22.31.110:4000/login');
+    final url = Uri.parse('http://192.168.1.74:4000/login');
 
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
