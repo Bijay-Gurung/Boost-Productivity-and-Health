@@ -10,6 +10,10 @@ router.post('/', auth, async (req, res) => {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
+  if (isNaN(height) || isNaN(weight) || isNaN(age)) {
+    return res.status(400).json({ message: 'Invalid numeric values' });
+  }
+  
   try {
     const details = await Details.findOneAndUpdate(
       { user: req.user.userId },

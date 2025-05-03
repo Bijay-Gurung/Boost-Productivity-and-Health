@@ -146,8 +146,8 @@ function SideNav({ adminName, email }){
             {users.map((user) => (
                 <tr key={user._id}>
                     <td>{user.userName}</td>
-                    <td>{user.email}</td>
-                    <td>
+                    <td id="email">{user.email}</td>
+                    <td id="action">
                         <button onClick={() => editUser(user._id)}>Edit</button>
                         <button onClick={() => deleteUser(user._id)}>Delete</button>
                     </td>

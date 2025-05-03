@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
+import 'home.dart';
 
 class DietaryPreferencesScreen extends StatelessWidget {
   final String userName;

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/MealListScreen.dart';
-import 'home.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
-
+import 'home.dart';
 class MealCategoriesScreen extends StatelessWidget {
   final String userName;
   final bool isVegan;
@@ -64,7 +62,7 @@ class MealCategoriesScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildMealCard(context, 'Breakfast', 'assets/Breakfast.jpg'),
-              _buildMealCard(context, 'Meal', 'assets/Meal.jpg'),
+              _buildMealCard(context, 'Lunch', 'assets/Meal.jpg'),
             ],
           ),
           const SizedBox(height: 20),

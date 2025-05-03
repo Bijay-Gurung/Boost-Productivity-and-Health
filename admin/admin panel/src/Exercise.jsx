@@ -171,6 +171,15 @@ function SideNav({ adminName, email }) {
                             <option value="Triceps">Triceps</option>
                             <option value="Legs">Legs</option>
                             <option value="Abs">Abs</option>
+                            <option value="Fullbody">Full Body</option>
+                            <option value="core">Core</option>
+                            <option value="lc">Legs, Core</option>
+                            <option value="cls">Core, Legs, Shoulders</option>
+                            <option value="lac">Legs, Arms, Core</option>
+                            <option value="hlb">Hamstrings, Lower Back</option>
+                            <option value="innerThigh">Inner Thighs</option>
+                            <option values="ol">Obliques, Lats</option>
+                            <option values="hfq">Hip Flexors, Quads</option>
                         </select><br/>
 
                         <input type="number" value={duration} placeholder="Duration (minutes)" 
@@ -184,6 +193,8 @@ function SideNav({ adminName, email }) {
                             <option value="Low">Low</option>
                             <option value="Medium">Medium</option>
                             <option value="High">High</option>
+                            <option value="ltm">Low to Medium</option>
+                            <option value="mth">Medium to High</option>
                         </select><br/>
 
                         <textarea rows='5' value={steps} placeholder="Steps" 

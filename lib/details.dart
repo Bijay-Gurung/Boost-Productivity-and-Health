@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class Details extends StatefulWidget {
@@ -28,8 +29,8 @@ class _DetailsState extends State<Details> {
 
   Future<void> saveDetails() async {
     final age = int.tryParse(_ageController.text);
-    final height = int.tryParse(_heightController.text);
-    final weight = int.tryParse(_weightController.text);
+    final height = double.tryParse(_heightController.text);
+    final weight = double.tryParse(_weightController.text);
 
     if (age == null || height == null || weight == null || _selectedGender == null) {
       showDialog(
@@ -204,18 +205,22 @@ class _DetailsState extends State<Details> {
   }
 
   Widget _buildInputField(String label, {required TextEditingController controller}) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 15,
-        ),
+  return TextFormField(
+    controller: controller,
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
+    inputFormatters: [
+      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+    ],
+    decoration: InputDecoration(
+      labelText: label,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
       ),
-    );
-  }
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 15,
+      ),
+    ),
+  );
+}
 }

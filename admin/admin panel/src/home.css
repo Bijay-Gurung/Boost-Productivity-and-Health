@@ -79,7 +79,6 @@
 
 .section .content .total{
     margin-top: 50px;
-    margin-left: 20px;
     display: flex;
 }
 
@@ -132,7 +131,7 @@
 
 .section .content .userData{
     height: 400px;
-    width: 450px;
+    width: 590px;
     border-radius: 9px;
     border: none;
     background-color: #ffffff05;
@@ -141,8 +140,10 @@
     box-shadow: 2px 2px 8px 2px #4c4c4c;
     color: #fff;
     position: relative;
-    left: 130%;
+    left: 80%;
     bottom: 20%;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .section .content .userData h2{
@@ -152,10 +153,18 @@
 .section .content .userData tbody tr td button{
     height: 30px;
     width: 50px;
-    margin-left: 10px;
+    margin-left: 30px;
     border-radius: 9px;
 }
 
 .section .content .userData tbody tr td{
-    margin-left: 10px;
+    margin-left: 20px;
+}
+
+.section .content .userData tbody tr #action{
+    display: flex;
+}
+
+.section .content .userData tbody tr #email{
+    padding-left: 15px;
 }
