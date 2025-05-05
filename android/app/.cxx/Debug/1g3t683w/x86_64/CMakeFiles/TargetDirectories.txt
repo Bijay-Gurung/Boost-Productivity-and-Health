@@ -1,0 +1,2 @@
+D:/Boost Productivity and Health/Boost-Productivity-and-Health/android/app/.cxx/Debug/1g3t683w/x86_64/CMakeFiles/edit_cache.dir
+D:/Boost Productivity and Health/Boost-Productivity-and-Health/android/app/.cxx/Debug/1g3t683w/x86_64/CMakeFiles/rebuild_cache.dir

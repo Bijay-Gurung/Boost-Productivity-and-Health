@@ -13,6 +13,7 @@ const PasswordResetRouter = require('./routes/passwordResetRoutes.js');
 const detailsRoutes = require('./routes/detailsRoutes.js');
 const exerciseRoutes = require('./routes/exerciseRoutes.js');
 const mealRouter = require('./routes/mealRouter.js');
+const mealPlanRouter = require('./routes/mealPlanRoutes.js');
 
 const cors = require('cors');
 
@@ -38,6 +39,7 @@ app.use('/forgot-password', PasswordResetRouter);
 app.use('/details', detailsRoutes);
 app.use('/exercise', exerciseRoutes);
 app.use('/meal', mealRouter);
+app.use('/mealPlan', mealPlanRouter);
 
 mongoose.connect('mongodb://localhost:27017/BoostProductivityAndHealth')
   .then(() => console.log('Connected to MongoDB'))

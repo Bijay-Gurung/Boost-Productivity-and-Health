@@ -3,6 +3,7 @@ const Recipe = require('../models/meals');
 const express = require('express');
 const router = express.Router();
 const path = require('path');
+const auth = require('../middleware/auth');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -52,7 +53,7 @@ router.get('/', async (req, res) => {
       const { category, search, isVegan } = req.query;
       const query = {};
   
-      if (category) query.category = category;
+      if (category) query.category = { $regex: new RegExp(category, 'i') };
       if (search) query.recipe = { $regex: search, $options: 'i' };
       if (isVegan !== undefined) query.isVegan = isVegan === 'true';
   
@@ -71,7 +72,6 @@ router.put('/:id', upload.single('image'), async (req, res) => {
             date: new Date(req.body.date)
         };
 
-        // Convert string boolean to actual boolean
         if (typeof updates.isVegan === 'string') {
             updates.isVegan = updates.isVegan === 'true';
         }

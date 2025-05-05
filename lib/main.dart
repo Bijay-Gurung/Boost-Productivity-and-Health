@@ -9,6 +9,7 @@ import 'DietaryPreferences.dart';
 import 'MealCategories.dart';
 import 'MealListScreen.dart';
 import 'MealDetailsScreen.dart';
+import 'MealPlanner.dart';
 
 void main() {
   runApp(const MyApp());
@@ -76,6 +77,14 @@ class MyApp extends StatelessWidget {
             weight: args['weight'] as int,
             gender: args['gender'] as String,
             userName: args['userName'] as String,
+          );
+        },
+
+        '/mealPlanner': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return MealPlannerScreen(
+            userName: args['userName']!,
+            userId: args['userId']!,
           );
         },
       },
