@@ -18,7 +18,7 @@ const upload = multer({ storage: storage });
 
 router.post('/', upload.single('image'), async (req, res) => {
     try {
-        const { recipe, author, date, cookingTime, calories, carbs, protein, fat, nutInfo, ingredient, process, details, category, isVegan} = req.body;
+        const { recipe, author, date, cookingTime, calories, carbs, protein, fat, nutInfo, ingredient, process, details, category, isVegetarian} = req.body;
         const imagePath = req.file ? req.file.path : '';
 
         const newRecipe = new Recipe({
@@ -26,17 +26,17 @@ router.post('/', upload.single('image'), async (req, res) => {
             author,
             date,
             cookingTime,
-            calories,
-            carbs,
-            protein,
-            fat,
+            calories: parseFloat(calories),
+            carbs: parseFloat(carbs),
+            protein: parseFloat(protein),
+            fat: parseFloat(fat),
             nutInfo,
             ingredient,
             process,
             image: imagePath,
             category,
             details,
-            isVegan
+            isVegetarian,
         });
 
         await newRecipe.save();
@@ -50,16 +50,29 @@ router.post('/', upload.single('image'), async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-      const { category, search, isVegan } = req.query;
+      const { category, search, dietaryPreference } = req.query;
       const query = {};
   
       if (category) query.category = { $regex: new RegExp(category, 'i') };
       if (search) query.recipe = { $regex: search, $options: 'i' };
-      if (isVegan !== undefined) query.isVegan = isVegan === 'true';
+      if (dietaryPreference !== undefined) {
+        const isVegetarian = dietaryPreference.toLowerCase() === 'true';
+        console.log('Received dietaryPreference:', dietaryPreference);
+        console.log('Converted isVegetarian:', isVegetarian);
+        query.isVegetarian = isVegetarian;
+      }
   
+      console.log('Final query:', JSON.stringify(query));
       const recipes = await Recipe.find(query);
+      console.log('Found recipes:', recipes.length);
+      console.log('Sample recipe:', recipes.length > 0 ? {
+        recipe: recipes[0].recipe,
+        isVegetarian: recipes[0].isVegetarian
+      } : 'No recipes found');
+      
       res.json(recipes);
     } catch (error) {
+      console.error('Error in GET /:', error);
       res.status(500).json({ message: 'Server error', error: error.message });
     }
   });
@@ -72,8 +85,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
             date: new Date(req.body.date)
         };
 
-        if (typeof updates.isVegan === 'string') {
-            updates.isVegan = updates.isVegan === 'true';
+        if (typeof updates.isVegetarian === 'string') {
+            updates.isVegetarian = updates.isVegetarian === 'true';
         }
 
         const updatedMeal = await Recipe.findByIdAndUpdate(

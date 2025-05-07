@@ -18,19 +18,19 @@ const recipe_Schema = new mongoose.Schema({
         required: true,
     },
     calories: {
-        type: String,
+        type: Number,
         required: true,
     },
     carbs: {
-        type: String,
+        type: Number,
         required: true,
     },
     protein: {
-        type: String,
+        type: Number,
         required: true,
     },
     fat: {
-        type: String,
+        type: Number,
         required: true,
     },
     nutInfo: {
@@ -57,7 +57,7 @@ const recipe_Schema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    isVegan: {
+    isVegetarian: {
         type: Boolean,
         required: true,
     }

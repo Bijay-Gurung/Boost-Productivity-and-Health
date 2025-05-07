@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 import 'taskManagerScreen.dart';
 import 'details.dart';
 import 'home.dart';
+import 'MealPlanner.dart';
+import 'MealListScreen.dart';
+
 class MealCategoriesScreen extends StatelessWidget {
   final String userName;
-  final bool isVegan;
+  final String userId;
+  final bool isVegetarian;
 
-  const MealCategoriesScreen({super.key, required this.userName, required this.isVegan,});
+  const MealCategoriesScreen({
+    super.key,
+    required this.userName,
+    required this.userId,
+    required this.isVegetarian,
+  });
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
@@ -25,106 +34,98 @@ class MealCategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        title: const Text('Meal Categories'),
+      ),
+      body: SafeArea(
+        child: GridView.count(
+          crossAxisCount: 2,
+          padding: const EdgeInsets.all(16.0),
+          mainAxisSpacing: 2.0,
+          crossAxisSpacing: 2.0,
+          childAspectRatio: 0.8,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getGreeting(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  userName,
-                  style: const TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ],
-            ),
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              onPressed: () {
-                // Handle notifications
-              },
-            ),
+            _buildMealCard(context, 'Breakfast', 'assets/Breakfast.jpg'),
+            _buildMealCard(context, 'Lunch', 'assets/Meal.jpg'),
+            _buildMealCard(context, 'Dinner', 'assets/Dinner.jpg'),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildMealCard(context, 'Breakfast', 'assets/Breakfast.jpg'),
-              _buildMealCard(context, 'Lunch', 'assets/Meal.jpg'),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildMealCard(context, 'Dinner', 'assets/Dinner.jpg'),
-              const SizedBox(width: 160),
-            ],
-          ),
-        ],
-      ),
-      bottomNavigationBar: _buildFooter(context),
     );
   }
 
   Widget _buildMealCard(BuildContext context, String title, String imagePath) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.pushNamed(
-        context,
-        '/mealList',
-        arguments: {
-          'userName': userName,
-          'category': title,
-          'isVegan': isVegan,
-        },
-      );
-    },
-    child: Column(
-      children: [
-        Container(
-          width: 160,
-          height: 160,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: AssetImage(imagePath),
-              fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MealListScreen(
+              userId: userId,
+              userName: userName,
+              dietaryPreference: isVegetarian ? DietaryPreference.vegetarian : DietaryPreference.nonVegetarian,
+              mealCategory: _getMealCategory(title),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+              child: Image.asset(
+                imagePath,
+                height: 160,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 10),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
+
+  void _navigateToMealList(BuildContext context, String category) {
+    Navigator.pushNamed(
+      context,
+      '/mealList',
+      arguments: {
+        'userName': userName,
+        'userId': userId,
+        'dietaryPreference': isVegetarian ? DietaryPreference.vegetarian : DietaryPreference.nonVegetarian,
+        'mealCategory': _getMealCategory(category),
+      },
+    );
+  }
+
+  MealCategory _getMealCategory(String category) {
+    switch (category) {
+      case 'Breakfast':
+        return MealCategory.breakfast;
+      case 'Lunch':
+        return MealCategory.lunch;
+      case 'Dinner':
+        return MealCategory.dinner;
+      default:
+        return MealCategory.lunch;
+    }
+  }
 
   Widget _buildFooter(BuildContext context) {
     return Container(
@@ -145,6 +146,7 @@ class MealCategoriesScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => HomePage(
                   userName: userName,
                   email: '',
+                  userId: userId,
                 )),
               );
             },
@@ -169,7 +171,7 @@ class MealCategoriesScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Details(userName: userName,)),
+                MaterialPageRoute(builder: (context) => Details(userName: userName, userId: userId,)),
               );
             },
             child: const Text('Exercise'),

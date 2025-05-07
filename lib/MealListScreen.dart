@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/MealDetailsScreen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
-import 'home.dart';
-import 'taskManagerScreen.dart';
-import 'details.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'MealPlanner.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final storage = FlutterSecureStorage();
 
 class MealListScreen extends StatefulWidget {
+  final String userId;
   final String userName;
-  final String category;
-  final bool isVegan;
+  final DietaryPreference dietaryPreference;
+  final MealCategory mealCategory;
 
-  const MealListScreen({
+  MealListScreen({
     super.key,
+    required this.userId,
     required this.userName,
-    required this.category,
-    required this.isVegan,
+    required this.dietaryPreference,
+    required this.mealCategory,
   });
 
   @override
-  State<MealListScreen> createState() => _MealListScreenState();
+  _MealListScreenState createState() => _MealListScreenState();
 }
 
 class _MealListScreenState extends State<MealListScreen> {
-  List<dynamic> _meals = [];
-  List<dynamic> _filteredMeals = [];
-  final TextEditingController _searchController = TextEditingController();
-  bool _isLoading = true;
-  Timer? _debounceTimer;
+  List<Meal> _meals = [];
+  bool _isLoading = false;
+  String? _error;
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -36,281 +38,207 @@ class _MealListScreenState extends State<MealListScreen> {
     _fetchMeals();
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _debounceTimer?.cancel();
-    super.dispose();
-  }
+  Future<void> _fetchMeals() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
-  Future<void> _fetchMeals({String query = ''}) async {
     try {
       final response = await http.get(
         Uri.parse(
-        'http://192.168.1.74:4000/meal?'
-        'category=${widget.category}&'
-        'isVegan=${widget.isVegan}&'
-        'search=$query'
+          'http://192.168.1.74:4000/meal?dietaryPreference=${widget.dietaryPreference == DietaryPreference.vegetarian ? 'true' : 'false'}&category=${widget.mealCategory.toString().split('.').last}',
         ),
       );
 
       if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
         setState(() {
-          _meals = json.decode(response.body);
-          _filteredMeals = _meals;
-          _isLoading = false;
+          _meals = data.map((x) => Meal.fromJson(x)).toList();
         });
+      } else {
+        throw Exception('Failed to load meals');
       }
     } catch (e) {
-      setState(() => _isLoading = false);
+      setState(() {
+        _error = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
-  void _onSearchChanged(String query) {
-    if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
-    
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-      if (query.isEmpty) {
-        setState(() => _filteredMeals = _meals);
-      } else {
-        setState(() {
-          _filteredMeals = _meals.where((meal) {
-            final name = meal['recipe'].toString().toLowerCase();
-            return name.contains(query.toLowerCase());
-          }).toList();
-        });
-      }
-    });
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 30)),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
 
-  String _getGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    if (hour < 21) return 'Good Evening';
-    return 'Good Night';
+  Future<void> _planMeal(Meal meal) async {
+    try {
+      final token = await storage.read(key: 'jwtToken');
+
+      final response = await http.post(
+        Uri.parse('http://192.168.1.74:4000/mealPlan'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token'
+          },
+        body: json.encode({
+          'date': _selectedDate.toIso8601String(),
+          'meals': [{
+            'mealType': widget.mealCategory.toString().split('.').last,
+            'meal': meal.id,
+          }]
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Meal planned successfully')),
+        );
+        Navigator.pop(context, true);
+      } else {
+        print('Failed with status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to plan meal');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error planning meal: ${e.toString()}')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getGreeting(),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  widget.userName,
-                  style: const TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ],
-            ),
-            IconButton(
-              icon: const Icon(Icons.notifications),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search meals...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onChanged: _onSearchChanged,
-            ),
-          ),
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: _filteredMeals.length,
-                    itemBuilder: (context, index) {
-                      final meal = _filteredMeals[index];
-                      return _buildMealCard(meal);
-                    },
-                  ),
+        title: Text('${widget.mealCategory.toString().split('.').last} - ${widget.dietaryPreference.toString().split('.').last}'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () => _selectDate(context),
           ),
         ],
       ),
-      bottomNavigationBar: _buildFooter(context),
-    );
-  }
-
-  Widget _buildMealCard(Map<String, dynamic> meal) {
-    return Card(
-      margin: const EdgeInsets.all(8),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        'http://192.168.1.74:4000/${meal['image']}',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
+              ? Center(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        meal['recipe'],
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        'Error: $_error',
+                        style: const TextStyle(color: Colors.red),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Cooking Time: ${meal['cookingTime']}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Fat: ${meal['fat']}',
-                            style: _macroTextStyle(),
-                          ),
-                          Text(
-                            'Protein: ${meal['protein']}',
-                            style: _macroTextStyle(),
-                          ),
-                          Text(
-                            'Carbs: ${meal['carbs']}',
-                            style: _macroTextStyle(),
-                          ),
-                        ],
+                      ElevatedButton(
+                        onPressed: _fetchMeals,
+                        child: const Text('Retry'),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Calories: ${meal['calories']}',
-                  style: _macroTextStyle(),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MealDetailsScreen(
-                          userName: widget.userName,
-                          meal: meal,
-                        ),
+                )
+              : Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      color: Colors.blue[50],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Selected Date: ${_selectedDate.toString().split(' ')[0]}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextButton.icon(
+                            onPressed: () => _selectDate(context),
+                            icon: const Icon(Icons.calendar_today),
+                            label: const Text('Change Date'),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  child: const Text('More'),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: _meals.length,
+                        itemBuilder: (context, index) {
+                          final meal = _meals[index];
+                          return Card(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.all(8),
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: CachedNetworkImage(
+                                  imageUrl: meal.image.startsWith('http') 
+                                      ? meal.image 
+                                      : 'http://192.168.1.74:4000/${meal.image}',
+                                  width: 60,
+                                  height: 60,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                  errorWidget: (context, url, error) => Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: Colors.grey[300],
+                                    child: const Icon(Icons.restaurant, color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                meal.recipe,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4),
+                                  Text('${meal.calories} calories'),
+                                  const SizedBox(height: 4),
+                                ],
+                              ),
+                              trailing: ElevatedButton(
+                                onPressed: () => _planMeal(meal),
+                                child: const Text('Plan'),
+                              ),
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20),
+                                    ),
+                                  ),
+                                  builder: (context) => MealDetailsSheet(meal: meal),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
-
-  TextStyle _macroTextStyle() {
-    return const TextStyle(
-      fontSize: 14,
-      color: Colors.blueGrey,
-    );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        border: Border(top: BorderSide(color: Colors.grey)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage(
-                  userName: widget.userName,
-                  email: '',
-                )),
-              );
-            },
-            child: const Text('Home'),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const TaskManagerScreen()),
-              );
-            },
-            child: const Text('TaskManager'),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => Details(userName: widget.userName),),
-              );
-            },
-            child: const Text('Exercise'),
-          ),
-        ],
-      ),
-    );
-  }
-
 }

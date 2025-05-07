@@ -4,6 +4,7 @@ const Signup = require('../models/signupSchema');
 const router = express.Router();
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 
 router.post('/', async (req, res) => {
     try {
@@ -28,7 +29,13 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        res.status(200).json({ message: 'Login successful', user: {userName: user.userName, email: user.email} });
+        const token = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+          );
+
+        res.status(200).json({ message: 'Login successful', token: token, user: {_id: user._id, userName: user.userName, email: user.email} });
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).json({ message: 'Server error', error: error.message });

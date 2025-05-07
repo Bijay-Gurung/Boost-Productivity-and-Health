@@ -32,8 +32,8 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
 
   Future<void> _addTask() async {
     final taskController = TextEditingController();
-    final dueDateController = TextEditingController();
-    final timeController = TextEditingController();
+    DateTime selectedDate = DateTime.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
 
     await showDialog(
       context: context,
@@ -46,28 +46,71 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
               controller: taskController,
               decoration: InputDecoration(labelText: 'Task Name'),
             ),
-            TextField(
-              controller: dueDateController,
-              decoration: InputDecoration(labelText: 'Due Date (YYYY-MM-DD)'),
+            const SizedBox(height: 16),
+            ListTile(
+              title: Text('Due Date: ${DateFormat('yyyy-MM-dd').format(selectedDate)}'),
+              trailing: Icon(Icons.calendar_today),
+              onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate,
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(Duration(days: 365)),
+                );
+                if (picked != null) {
+                  selectedDate = picked;
+                }
+              },
             ),
-            TextField(
-              controller: timeController,
-              decoration: InputDecoration(labelText: 'Due Time (HH:MM)'),
+            ListTile(
+              title: Text('Due Time: ${selectedTime.format(context)}'),
+              trailing: Icon(Icons.access_time),
+              onTap: () async {
+                final TimeOfDay? picked = await showTimePicker(
+                  context: context,
+                  initialTime: selectedTime,
+                );
+                if (picked != null) {
+                  selectedTime = picked;
+                }
+              },
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () {
-              final task = taskController.text;
-              final dueDate = DateTime.parse('${dueDateController.text}T${timeController.text}');
-              _taskManagerService.createTask(task, dueDate).then((newTask) {
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (taskController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Please enter a task name')),
+                );
+                return;
+              }
+
+              final dueDate = DateTime(
+                selectedDate.year,
+                selectedDate.month,
+                selectedDate.day,
+                selectedTime.hour,
+                selectedTime.minute,
+              );
+
+              _taskManagerService.createTask(taskController.text, dueDate).then((newTask) {
                 setState(() {
                   _tasks.add(newTask);
                 });
                 Navigator.of(context).pop();
               }).catchError((e) {
                 print('Error adding task: $e');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error adding task: $e')),
+                );
               });
             },
             child: Text('Save'),
@@ -79,42 +122,76 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
 
   Future<void> _editTask(TaskManager task) async {
     final taskController = TextEditingController(text: task.task);
-
-    final formattedDueDate = DateFormat('yyyy-MM-dd').format(task.dueDate);
-    final formattedDueTime = DateFormat('HH:mm').format(task.dueDate);
-    final dueDateController = TextEditingController(text: formattedDueDate);
-    final timeController = TextEditingController(text: formattedDueTime);
+    DateTime selectedDate = task.dueDate;
+    TimeOfDay selectedTime = TimeOfDay.fromDateTime(task.dueDate);
 
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit Task'),
+        title: const Text('Edit Task'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: taskController,
-              decoration: InputDecoration(labelText: 'Task Name'),
+              decoration: const InputDecoration(labelText: 'Task Name'),
             ),
-            TextField(
-              controller: dueDateController,
-              decoration: InputDecoration(labelText: 'Due Date (YYYY-MM-DD)'),
+            const SizedBox(height: 16),
+            ListTile(
+              title: Text('Due Date: ${DateFormat('yyyy-MM-dd').format(selectedDate)}'),
+              trailing: const Icon(Icons.calendar_today),
+              onTap: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: selectedDate,
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                );
+                if (picked != null) {
+                  selectedDate = picked;
+                }
+              },
             ),
-            TextField(
-              controller: timeController,
-              decoration: InputDecoration(labelText: 'Due Time (HH:MM)'),
+            ListTile(
+              title: Text('Due Time: ${selectedTime.format(context)}'),
+              trailing: const Icon(Icons.access_time),
+              onTap: () async {
+                final TimeOfDay? picked = await showTimePicker(
+                  context: context,
+                  initialTime: selectedTime,
+                );
+                if (picked != null) {
+                  selectedTime = picked;
+                }
+              },
             ),
           ],
         ),
         actions: [
           TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
             onPressed: () {
-              final updatedTask = taskController.text;
-              final updatedDueDate = DateTime.parse('${dueDateController.text}T${timeController.text}');
+              if (taskController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please enter a task name')),
+                );
+                return;
+              }
+
+              final dueDate = DateTime(
+                selectedDate.year,
+                selectedDate.month,
+                selectedDate.day,
+                selectedTime.hour,
+                selectedTime.minute,
+              );
 
               _taskManagerService.updateTask(task.id, {
-                'task': updatedTask,
-                'dueDate': updatedDueDate.toIso8601String(),
+                'task': taskController.text,
+                'dueDate': dueDate.toIso8601String(),
               }).then((updatedTask) {
                 setState(() {
                   final index = _tasks.indexOf(task);
@@ -123,9 +200,12 @@ class _TaskManagerScreenState extends State<TaskManagerScreen> {
                 Navigator.of(context).pop();
               }).catchError((e) {
                 print('Error updating task: $e');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error updating task: $e')),
+                );
               });
             },
-            child: Text('Save'),
+            child: const Text('Save'),
           ),
         ],
       ),

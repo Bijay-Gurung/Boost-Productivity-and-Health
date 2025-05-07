@@ -5,11 +5,13 @@ import 'details.dart';
 
 class MealDetailsScreen extends StatelessWidget {
   final String userName;
+  final String userId;
   final Map<String, dynamic> meal;
 
   const MealDetailsScreen({
     super.key,
     required this.userName,
+    required this.userId,
     required this.meal,
   });
 
@@ -19,6 +21,17 @@ class MealDetailsScreen extends StatelessWidget {
     if (hour < 17) return 'Good Afternoon';
     if (hour < 21) return 'Good Evening';
     return 'Good Night';
+  }
+
+  void _navigateToMealPlanner(BuildContext context) {
+    Navigator.pushNamed(
+      context,
+      '/mealPlanner',
+      arguments: {
+        'userName': userName,
+        'meal': meal,
+      },
+    );
   }
 
   @override
@@ -54,75 +67,86 @@ class MealDetailsScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              meal['recipe'],
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Meal Image
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              image: DecorationImage(
+                image: NetworkImage(
+                  'http://192.168.1.74:4000/${meal['image']}',
+                ),
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          'http://192.168.1.74:4000/${meal['image']}',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    meal['details'],
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
-              ],
+          ),
+          const SizedBox(height: 20),
+          // Meal Name
+          Text(
+            meal['recipe'],
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 30),
-            _buildSectionTitle('Ingredients'),
-            const SizedBox(height: 10),
-            Text(
-              meal['ingredient'],
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 30),
-            _buildSectionTitle('Nutritional Information'),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildNutritionItem('Fat', meal['fat']),
-                _buildNutritionItem('Protein', meal['protein']),
-                _buildNutritionItem('Carbs', meal['carbs']),
-                _buildNutritionItem('Calories', meal['calories']),
-              ],
-            ),
-            const SizedBox(height: 30),
-            _buildSectionTitle('Cooking Procedure'),
-            const SizedBox(height: 10),
-            Text(
-              meal['process'],
-              style: const TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 10),
+          // Cooking Time and Calories
+          Row(
+            children: [
+              Icon(Icons.timer, color: Colors.grey[600]),
+              const SizedBox(width: 4),
+              Text('Cooking Time: ${meal['cookingTime']}'),
+              const SizedBox(width: 16),
+              Icon(Icons.local_fire_department, color: Colors.grey[600]),
+              const SizedBox(width: 4),
+              Text('${meal['calories']} Calories'),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Macronutrients
+          _buildSectionTitle('Macronutrients'),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNutritionItem('Protein', '${meal['protein']}g'),
+              _buildNutritionItem('Carbs', '${meal['carbs']}g'),
+              _buildNutritionItem('Fat', '${meal['fat']}g'),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Ingredients
+          _buildSectionTitle('Ingredients'),
+          const SizedBox(height: 10),
+          Column(
+            children: (meal['ingredient'] as String)
+            .split('\n')
+            .where((i) => i.isNotEmpty)
+            .map((ingredient) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                children: [
+                  const Icon(Icons.fiber_manual_record, size: 12),
+                  const SizedBox(width: 8),
+                  Text(ingredient.trim()),
+                ],
+              ),
+            ))
+            .toList(),
+          ),
+          Text(meal['ingredient']),
+          const SizedBox(height: 20),
+          // Procedure
+          _buildSectionTitle('Cooking Procedure'),
+          const SizedBox(height: 10),
+          Text(meal['process']),
+        ],
       ),
+    ),
       bottomNavigationBar: _buildFooter(context),
     );
   }
@@ -178,6 +202,7 @@ class MealDetailsScreen extends StatelessWidget {
                   builder: (context) => HomePage(
                     userName: userName,
                     email: '',
+                    userId: userId,
                   ),
                 ),
               );
@@ -202,7 +227,7 @@ class MealDetailsScreen extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Details(userName: userName),
+                  builder: (context) => Details(userName: userName, userId: userId,),
                 ),
               );
             },

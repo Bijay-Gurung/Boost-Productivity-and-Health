@@ -6,7 +6,9 @@ import 'dart:convert';
 
 class Details extends StatefulWidget {
   final String userName;
-  const Details({super.key, required this.userName});
+  final String userId;
+
+  const Details({super.key, required this.userName, required this.userId,});
 
   @override
   State<Details> createState() => _DetailsState();

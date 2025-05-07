@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui';
-import 'home.dart';
 import 'forgotPassword.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -13,6 +13,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<Login> {
+  final storage = FlutterSecureStorage();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
@@ -44,18 +45,73 @@ class _LoginScreenState extends State<Login> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        await storage.write(key: 'jwtToken', value: data['token']);
+        debugPrint('Server Response: $data');
+        
+        if (data == null) {
+          debugPrint('Data is null');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid response from server. Please try again.')),
+          );
+          return;
+        }
+
+        if (data['user'] == null) {
+          debugPrint('User data is null');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('User data not found. Please try again.')),
+          );
+          return;
+        }
+
+        final userData = data['user'];
+        debugPrint('User Data: $userData');
+
+        if (userData['userName'] == null) {
+          debugPrint('userName is null');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Username not found. Please try again.')),
+          );
+          return;
+        }
+
+        if (userData['email'] == null) {
+          debugPrint('email is null');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Email not found. Please try again.')),
+          );
+          return;
+        }
+
+        final userId = userData['_id'] ?? userData['id'];
+        if (userId == null) {
+          debugPrint('User ID is null. Available fields: ${userData.keys.join(', ')}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('User ID not found. Please try again.')),
+          );
+          return;
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(data['message'])),
+          SnackBar(content: Text(data['message'] ?? 'Login successful')),
         );
 
-        Navigator.pushReplacement(
+        final userName = userData['userName'].toString();
+        final email = userData['email'].toString();
+
+        debugPrint('Processed Data - userName: $userName, email: $email, userId: $userId');
+
+        if (!mounted) return;
+
+        Navigator.pushReplacementNamed(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(
-            userName: data['user']['userName'],
-            email: data['user']['email'],
-          )),
+          '/home',
+          arguments: {
+            'userName': userName,
+            'email': email,
+            'userId': userId.toString(),
+          },
         );
-
       } else {
         final error = json.decode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(

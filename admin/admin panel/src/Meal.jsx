@@ -50,7 +50,7 @@ function SideNav({ adminName, email }) {
     const [image, setImage] = useState(null);
     const [details, setDetails] = useState('');
     const [category, setCategory] = useState('Breakfast');
-    const [isVegan, setIsVegan] = useState(false);
+    const [isVegetarian, setIsVegan] = useState(false);
 
     useEffect(() => {
         fetchMeals();
@@ -84,7 +84,7 @@ function SideNav({ adminName, email }) {
         if (image) formData.append('image', image);
         formData.append('details', details);
         formData.append('category', category);
-        formData.append('isVegan', isVegan);
+        formData.append('isVegetarian', isVegetarian);
 
         try {
             const url = editMode && selectedMeal 
@@ -122,7 +122,7 @@ function SideNav({ adminName, email }) {
         setProcess(meal.process);
         setDetails(meal.details);
         setCategory(meal.category);
-        setIsVegan(meal.isVegan);
+        setIsVegan(meal.isVegetarian);
     };
 
     const handleDelete = async (id) => {
@@ -223,7 +223,7 @@ function SideNav({ adminName, email }) {
                         
                         <label>
                             <input type="checkbox" 
-                                checked={isVegan} 
+                                checked={isVegetarian} 
                                 onChange={(e) => setIsVegan(e.target.checked)} />
                             Is Vegan
                         </label><br/>
@@ -256,7 +256,7 @@ function SideNav({ adminName, email }) {
                                 <h3>{meal.recipe}</h3>
                                 <p><strong>Category:</strong> {meal.category}</p>
                                 <p><strong>Calories:</strong> {meal.calories}</p>
-                                <p><strong>Vegan:</strong> {meal.isVegan ? 'Yes' : 'No'}</p>
+                                <p><strong>Vegan:</strong> {meal.isVegetarian ? 'Yes' : 'No'}</p>
                                 <div className="meal-actions">
                                     <button className="edit-btn" onClick={() => handleEdit(meal)}>
                                         Edit

@@ -5,8 +5,9 @@ import 'home.dart';
 
 class DietaryPreferencesScreen extends StatelessWidget {
   final String userName;
+  final String userId;
 
-  const DietaryPreferencesScreen({super.key, required this.userName});
+  const DietaryPreferencesScreen({super.key, required this.userName, required this.userId,});
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
@@ -19,6 +20,18 @@ class DietaryPreferencesScreen extends StatelessWidget {
     } else {
       return 'Good Night';
     }
+  }
+
+  void _navigateToMealCategories(BuildContext context, bool isVegetarian) {
+    Navigator.pushNamed(
+      context,
+      '/mealCategories',
+      arguments: {
+        'userName': userName,
+        'userId': userId,
+        'isVegetarian': isVegetarian,
+      },
+    );
   }
 
   @override
@@ -75,14 +88,7 @@ class DietaryPreferencesScreen extends StatelessWidget {
                 backgroundColor: Colors.black,
               ),
               onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/mealCategories',
-                  arguments: {
-                    'userName': userName,
-                    'isVegan': true,
-                  },
-                );
+                _navigateToMealCategories(context, true);
               },
 
               child: const Text(
@@ -103,14 +109,7 @@ class DietaryPreferencesScreen extends StatelessWidget {
               ),
 
               onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  '/mealCategories',
-                  arguments: {
-                    'userName': userName,
-                    'isVegan': false,
-                  },
-                );
+                _navigateToMealCategories(context, false);
               },
 
               child: const Text(
@@ -147,6 +146,7 @@ class DietaryPreferencesScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => HomePage(
                   userName: userName,
                   email: '',
+                  userId: userId,
                 )),
               );
             },
@@ -171,7 +171,7 @@ class DietaryPreferencesScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Details(userName: userName,)),
+                MaterialPageRoute(builder: (context) => Details(userName: userName, userId: userId,)),
               );
             },
             child: const Text('Exercise'),

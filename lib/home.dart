@@ -7,8 +7,9 @@ import 'DietaryPreferences.dart';
 class HomePage extends StatelessWidget {
   final String userName;
   final String email;
+  final String userId;
 
-  const HomePage({super.key, required this.userName, required this.email});
+  const HomePage({super.key, required this.userName, required this.email, required this.userId,});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +92,7 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Details(userName: userName,)),
+                        MaterialPageRoute(builder: (context) => Details(userName: userName, userId: userId,)),
                       );
                     },
                     child: const FeatureCard(
@@ -111,7 +112,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DietaryPreferencesScreen(userName: userName),
+                          builder: (context) => DietaryPreferencesScreen(userName: userName, userId: userId),
                           ),
                           );
                     },

@@ -31,33 +31,43 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const Login(),
         '/home': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-          return HomePage(userName: args['userName']!, email: args['email']!);
+          return HomePage(
+            userName: args['userName']!,
+            email: args['email']!,
+            userId: args['userId']!,
+            
+          );
         },
-        '/taskManager': (context) => TaskManagerScreen(),
-        '/details': (context){
+        '/taskManager': (context) => const TaskManagerScreen(),
+        '/details': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-          return Details(userName: args['userName']!,);
+          return Details(userName: args['userName']!, userId: args['userId']!,);
         },
 
         '/dietaryPreferences': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-          return DietaryPreferencesScreen(userName: args['userName']!);
+          return DietaryPreferencesScreen(
+            userName: args['userName']!,
+            userId: args['userId']!,
+          );
         },
         
         '/mealCategories': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return MealCategoriesScreen(
             userName: args['userName']!,
-            isVegan: args['isVegan'] as bool,
+            userId: args['userId']!,
+            isVegetarian: args['isVegetarian'] as bool,
           );
         },
 
         '/mealList': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return MealListScreen(
+            userId: args['userId']!,
             userName: args['userName']!,
-            category: args['category']!,
-            isVegan: args['isVegan'] as bool,
+            dietaryPreference: args['dietaryPreference'] as DietaryPreference,
+            mealCategory: args['mealCategory'] as MealCategory,
           );
         },
 
@@ -65,6 +75,7 @@ class MyApp extends StatelessWidget {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return MealDetailsScreen(
             userName: args['userName']!,
+            userId: args['userId']!,
             meal: args['meal']!,
           );
         },

@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.fyp"
-    compileSdk = 34  // Set directly to 34
+    compileSdk = 35
     ndkVersion = "25.2.9519653"  // Explicit NDK version
 
     compileOptions {
