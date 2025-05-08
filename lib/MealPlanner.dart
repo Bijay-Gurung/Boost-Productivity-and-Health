@@ -73,7 +73,7 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
 
       final response = await http.get(
         Uri.parse(
-          'http://192.168.1.74:4000/mealPlan'
+          'http://localhost:4000/mealPlan'
         ),
         headers: {
           'Authorization': 'Bearer $token'
@@ -116,7 +116,7 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
       
       final response = await http.get(
         Uri.parse(
-          'http://192.168.1.74:4000/meal?dietaryPreference=${isVegetarian.toString()}&category=${_selectedMealCategory.toString().split('.').last}',
+          'http://localhost:4000/meal?dietaryPreference=${isVegetarian.toString()}&category=${_selectedMealCategory.toString().split('.').last}',
         ),
       );
       
@@ -148,7 +148,7 @@ class _MealPlannerScreenState extends State<MealPlannerScreen> {
     // if (!mounted) return;
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.74:4000/mealPlan'),
+        Uri.parse('http://localhost:4000/mealPlan'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'userId': widget.userId,
@@ -559,7 +559,7 @@ class MealCard extends StatelessWidget {
           children: [
             Expanded(
               child: CachedNetworkImage(
-                imageUrl: 'http://192.168.1.74:4000/${meal.image}',
+                imageUrl: 'http://localhost:4000/${meal.image}',
                 fit: BoxFit.cover,
                 width: double.infinity,
                 placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
@@ -643,7 +643,7 @@ class MealDetailsSheet extends StatelessWidget {
               Stack(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: 'http://192.168.1.74:4000/${meal.image}',
+                    imageUrl: 'http://localhost:4000/${meal.image}',
                     height: 250,
                     width: double.infinity,
                     fit: BoxFit.cover,

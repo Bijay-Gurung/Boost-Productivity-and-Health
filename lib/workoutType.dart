@@ -181,7 +181,7 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
 
   Future<void> _fetchExercises() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.74:4000/exercise'));
+      final response = await http.get(Uri.parse('http://localhost:4000/exercise'));
       if (!mounted) return;
       
       if (response.statusCode == 200) {
@@ -224,7 +224,7 @@ class _ExerciseListScreenState extends State<ExerciseListScreen> {
                       child: ListTile(
                         leading: exercise.image.isNotEmpty
                             ? Image.network(
-                                'http://192.168.1.74:4000/${exercise.image}',
+                                'http://localhost:4000/${exercise.image}',
                                 width: 50,
                                 height: 50,
                                 fit: BoxFit.cover,

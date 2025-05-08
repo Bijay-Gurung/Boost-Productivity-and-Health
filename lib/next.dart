@@ -81,7 +81,7 @@ class _NextPageState extends State<NextPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.74:4000/details/fitness'),
+        Uri.parse('http://localhost:4000/details/fitness'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'bmi': bmi,

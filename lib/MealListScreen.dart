@@ -47,7 +47,7 @@ class _MealListScreenState extends State<MealListScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-          'http://192.168.1.74:4000/meal?dietaryPreference=${widget.dietaryPreference == DietaryPreference.vegetarian ? 'true' : 'false'}&category=${widget.mealCategory.toString().split('.').last}',
+          'http://localhost:4000/meal?dietaryPreference=${widget.dietaryPreference == DietaryPreference.vegetarian ? 'true' : 'false'}&category=${widget.mealCategory.toString().split('.').last}',
         ),
       );
 
@@ -89,7 +89,7 @@ class _MealListScreenState extends State<MealListScreen> {
       final token = await storage.read(key: 'jwtToken');
 
       final response = await http.post(
-        Uri.parse('http://192.168.1.74:4000/mealPlan'),
+        Uri.parse('http://localhost:4000/mealPlan'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
@@ -187,7 +187,7 @@ class _MealListScreenState extends State<MealListScreen> {
                                 child: CachedNetworkImage(
                                   imageUrl: meal.image.startsWith('http') 
                                       ? meal.image 
-                                      : 'http://192.168.1.74:4000/${meal.image}',
+                                      : 'http://localhost:4000/${meal.image}',
                                   width: 60,
                                   height: 60,
                                   fit: BoxFit.cover,
